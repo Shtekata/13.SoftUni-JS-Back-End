@@ -1,0 +1,27 @@
+<form action="/cats" method="POST">
+    <label>Cat Name
+        <input type="text" name="cat">
+    </label>
+    <input type="submit" value="create">
+</form>
+<form action="/cats" method="POST">
+    <label>Cat Name
+        <input type="text" name="cat">
+    </label>
+    <input type="submit" value="delete">
+</form>
+{{>greeting}}
+<hr>
+{{input}}
+{{#if cats}}
+<ul>
+    {{!-- <li>Navcho</li>
+    <li>Garry</li>
+    <li>Tsutsulan</li> --}}
+    {{#each cats}}
+    {{>cat}}
+    {{/each}}
+</ul>
+{{else}}
+<h2>No cats!</h2>
+{{/if}}
