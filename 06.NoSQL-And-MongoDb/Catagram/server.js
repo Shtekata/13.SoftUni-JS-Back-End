@@ -8,6 +8,10 @@ import loggerMiddleware from './middlewares/loggerMiddleware.js';
 import handlebars from 'express-handlebars';
 import bodyParser from 'body-parser';
 import cats from './cats.mjs';
+import mongoose from 'mongoose';
+import db from './config/db.js';
+import createCat from './services/createCat.js';
+import Cat from './modules/Cat.js';
 
 const app = express();
 const port = 5000;
@@ -25,9 +29,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.get('/', (req, res) => { res.status(200); res.send('Hello world from Express.js!') });
 // app.get('/', (req, res) => { res.status(200); res.sendFile('./public/index.html', { root: __dirname }); });
 app.get('/', (req, res) => {
-    let name = 'Pesho';
-    let title = 'All about <p> Tags';
-    res.status(200).render('home', { name, title });
+
+    // createCat('Freddy', 'Asennn');
+    // Cat.find({ name: 'Freddy' }).populate('owner')
+    Cat.find({ name: 'Freddy' }).populate({
+        path: 'owner', match: { age: { $gte: 29 } }, select: 'name', options: { limit: 3 }
+    })
+        .then(x => {
+            // console.log(`Cat ${x[0].name} has owner ${x[0].owner.name}!`);
+            console.log(x);
+
+            let name = 'Pesho';
+            let title = 'All about <p> Tags';
+            res.status(200).render('home', { name, title });
+        });
 });
 
 // app.get('/cats', (req, res) => { console.log('get cats'); res.send('cats received!') })
