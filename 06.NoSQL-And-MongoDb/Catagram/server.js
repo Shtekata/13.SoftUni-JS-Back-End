@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.get('/', (req, res) => { res.status(200); res.sendFile('./public/index.html', { root: __dirname }); });
 app.get('/', (req, res) => {
 
-    // createCat('Freddy', 'Asennn');
+    // createCat('Freddy', 'Asen');
     // Cat.find({ name: 'Freddy' }).populate('owner')
     Cat.find({ name: 'Freddy' }).populate({
         path: 'owner', match: { age: { $gte: 29 } }, select: 'name', options: { limit: 3 }

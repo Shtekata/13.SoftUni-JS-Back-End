@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const personSchema = new mongoose.Schema({
-    name: { type: String, required: true, minlength: 5 },
+    name: { type: String, required: true, minlength: 3 },
     age: Number
 }, { toJSON: { virtuals: true } });
 personSchema.methods.getInfo = function () {

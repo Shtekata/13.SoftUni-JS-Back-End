@@ -8,7 +8,8 @@ function createCat(name, owner) {
             const cat = new Cat({ name, age: 5, breed: 'Persian', owner: x });
             return cat.save();
         })
-        .then(x => console.log(x));
+        .then(x => console.log(x))
+        .catch(err => console.log(`${err._message}: ${err.errors.name.properties.message}`));
 }
 
 export default createCat;
