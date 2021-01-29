@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "SET NODE_ENV=development && nodemon",
-    "prod": "SET NODE_ENV=production && node index.js"
+    "start": "SET NODE_ENV=development && SET PORT=5000 && nodemon",
+    "prod": "SET NODE_ENV=production && SET PORT=80 && node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
