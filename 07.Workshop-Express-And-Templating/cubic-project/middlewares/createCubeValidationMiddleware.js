@@ -13,7 +13,7 @@ const validateCubeFormInputs = (req, res, next) => {
         case '5': data.five = true; break;
         case '6': data.six = true; break;
     }
-    if (req.body.name.length < 3 || req.body.name.length > 10) {
+    if (req.body.name.length < 3 || req.body.name.length > 30) {
         return res.render('create', {
             data,
             title: 'Create Cube',
