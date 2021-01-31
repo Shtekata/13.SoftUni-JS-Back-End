@@ -1,4 +1,4 @@
-const validateCubeFormInputs = (req, res, next) => {
+export const validateCubeFormInputs = (req, res, next) => {
     const data = {
         name: req.body.name,
         description: req.body.description,
@@ -13,21 +13,21 @@ const validateCubeFormInputs = (req, res, next) => {
         case '5': data.five = true; break;
         case '6': data.six = true; break;
     }
-    if (req.body.name.length < 3 || req.body.name.length > 30) {
+    if (req.body.name.trim().length < 3 || req.body.name.trim().length > 30) {
         return res.render('create', {
             data,
             title: 'Create Cube',
             nameMessage: 'Name have to be between 3 and 10 characters!'
         });
     }
-    if (req.body.description.length < 5 || req.body.description.length > 500) {
+    if (req.body.description.trim().length < 5 || req.body.description.trim().length > 500) {
         return res.render('create', {
             data,
             title: 'Create Cube',
             descriptionMessage: 'Description have to be between 5 and 500 characters!'
         });
     }
-    if (!req.body.imageUrl.startsWith('http')) {
+    if (!req.body.imageUrl.trim().startsWith('http')) {
         return res.render('create', {
             data,
             title: 'Create Cube',
@@ -43,5 +43,3 @@ const validateCubeFormInputs = (req, res, next) => {
     }
     next();
 };
-
-export default validateCubeFormInputs;

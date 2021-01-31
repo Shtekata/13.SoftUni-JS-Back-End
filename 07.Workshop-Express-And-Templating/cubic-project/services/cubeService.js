@@ -13,6 +13,10 @@ function getAll() {
     return cubesDb;
 };
 
+function getOne(id) {
+    return cubesDb.find(x => x.id === id);
+}
+
 function createCube(data) {
     const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
     cubesDb.push(cube);
@@ -23,5 +27,6 @@ function createCube(data) {
 
 export default {
     getAll,
+    getOne,
     create: createCube
 };

@@ -1,5 +1,5 @@
 import Router from 'express';
-import validator from '../middlewares/createCubeValidationMiddleware.js';
+import { validateCubeFormInputs as validator } from './helpers/cubeHelperMiddleware.js';
 import cubeService from '../services/cubeService.js';
 
 const router = Router();
@@ -15,6 +15,10 @@ router.post('/create', validator, (req, res) => {
     res.redirect('/products');
 });
 
-router.get('/details/:productId', (req, res) => res.render('details', { title: 'Cube Details' }));
+router.get('/details/:productId', (req, res) => {
+    const cube = cubeService.getOne(req.params.productId);
+    res.render('details', { title: 'Cube Details', cube });
+    console.log(cube);
+});
 
 export default router;
