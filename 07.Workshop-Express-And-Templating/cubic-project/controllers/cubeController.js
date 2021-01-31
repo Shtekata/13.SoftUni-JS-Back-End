@@ -11,8 +11,9 @@ router.get('/', (req, res) => {
 
 router.get('/create', (req, res) => res.render('create', { title: 'Create Cube' }));
 router.post('/create', validator, (req, res) => {
-    cubeService.create(req.body);
-    res.redirect('/products');
+    // cubeService.create(req.body);
+    // res.redirect('/products');
+    cubeService.create(req.body, (err) => { if (err) return res.status(500).end(); res.redirect('/products'); });
 });
 
 router.get('/details/:productId', (req, res) => {

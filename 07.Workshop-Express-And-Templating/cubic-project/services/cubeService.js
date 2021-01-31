@@ -17,12 +17,14 @@ function getOne(id) {
     return cubesDb.find(x => x.id === id);
 }
 
-function createCube(data) {
+// function createCube(data) {
+function createCube(data, callback) {
     const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
     cubesDb.push(cube);
     fs.writeFile(path.join(path.resolve('db'), 'cubes.json'),
         JSON.stringify(cubesDb),
-        (err) => { if (err) return console.log(err) });
+        // (err) => { if (err) return console.log(err) });
+        callback);
 };
 
 export default {
