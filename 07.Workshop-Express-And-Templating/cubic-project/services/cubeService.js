@@ -2,12 +2,14 @@ import Cube from '../models/Cube.js';
 import uniqid from 'uniqid';
 import fs from 'fs';
 import path from 'path';
+import fsProm from 'fs/promises';
 
 let cubesDb = undefined;
-fs.readFile(path.join(path.resolve('db'), 'cubes.json'), (err, x) => {
-    if (err) return console.log(err);
-    cubesDb = JSON.parse(x);
-});
+// fs.readFile(path.join(path.resolve('db'), 'cubes.json'), (err, x) => {
+//     if (err) return console.log(err);
+//     cubesDb = JSON.parse(x);
+// });
+fsProm.readFile(path.join(path.resolve('db'), 'cubes.json')).then(x => cubesDb = JSON.parse(x)).catch(x => console.log(x));
     
 function getAll() {
     return cubesDb;
@@ -26,9 +28,16 @@ function createCube(data, callback) {
         // (err) => { if (err) return console.log(err) });
         callback);
 };
+    
+function createCubeProm(data) {
+    const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
+    cubesDb.push(cube);
+    return fsProm.writeFile(path.join(path.resolve('db'), 'cubes.json'), JSON.stringify(cubesDb));
+};
 
 export default {
     getAll,
     getOne,
-    create: createCube
+    create: createCube,
+    createProm: createCubeProm
 };

@@ -6,14 +6,17 @@ const router = Router();
 
 router.get('/', (req, res) => {
     const cubes = cubeService.getAll()
-    res.render('products', { title: 'Cubicle', cubes });
+    res.render('home', { title: 'Cubicle', cubes });
 });
 
 router.get('/create', (req, res) => res.render('create', { title: 'Create Cube' }));
 router.post('/create', validator, (req, res) => {
     // cubeService.create(req.body);
     // res.redirect('/products');
-    cubeService.create(req.body, (err) => { if (err) return res.status(500).end(); res.redirect('/products'); });
+
+    // cubeService.create(req.body, (err) => { if (err) return res.status(500).end(); res.redirect('/products'); });
+
+    cubeService.createProm(req.body).then(x => res.redirect('/products')).catch(x => res.status(500).end());
 });
 
 router.get('/details/:productId', (req, res) => {
