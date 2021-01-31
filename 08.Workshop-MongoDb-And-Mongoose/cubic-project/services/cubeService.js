@@ -1,20 +1,8 @@
 import Cube from '../models/Cube.js';
 import uniqid from 'uniqid';
-import fs from 'fs';
-import path from 'path';
-import fsProm from 'fs/promises';
-import cubeData from '../data/cubeData.js';
 
-let cubesDb = undefined;
-// fs.readFile(path.join(path.resolve('db'), 'cubes.json'), (err, x) => {
-//     if (err) return console.log(err);
-//     cubesDb = JSON.parse(x);
-// });
-fsProm.readFile(path.join(path.resolve('db'), 'cubes.json')).then(x => cubesDb = JSON.parse(x)).catch(x => console.log(x));
-    
 function getAll(query) {
-    // let result = cubesDb;
-    let result = cubeData.getAll();
+    let result = Cube.getAll();
     if (query.search) result = result.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()));
     if (query.from) result = result.filter(x => x.level >= query.from);
     if (query.to) result = result.filter(x => x.level <= query.to);
@@ -22,35 +10,16 @@ function getAll(query) {
 };
 
 function getOne(id) {
-    // return cubesDb.find(x => x.id === id);
-    return cubeData.getOne(id);
+    return Cube.getOne(id);
 }
-
-// function createCube(data) {
-function createCube(data, callback) {
-    const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
-    cubesDb.push(cube);
-    fs.writeFile(path.join(path.resolve('db'), 'cubes.json'),
-        JSON.stringify(cubesDb),
-        // (err) => { if (err) return console.log(err) });
-        callback);
-};
-    
-function createCubeProm(data) {
-    const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
-    cubesDb.push(cube);
-    return fsProm.writeFile(path.join(path.resolve('db'), 'cubes.json'), JSON.stringify(cubesDb));
-};
 
 function create(data) {
     const cube = new Cube(uniqid(), data.name, data.description, data.imageUrl, data.difficultyLevel);
-    return cubeData.create(cube);
+    return cube.save();
 }
 
 export default {
     getAll,
     getOne,
-    createCube: createCube,
-    createProm: createCubeProm,
     create
 };
