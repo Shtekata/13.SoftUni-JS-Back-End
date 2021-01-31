@@ -5,7 +5,7 @@ import cubeService from '../services/cubeService.js';
 const router = Router();
 
 router.get('/', (req, res) => {
-    const cubes = cubeService.getAll()
+    const cubes = cubeService.getAll(req.query);
     res.render('home', { title: 'Cubicle', cubes });
 });
 

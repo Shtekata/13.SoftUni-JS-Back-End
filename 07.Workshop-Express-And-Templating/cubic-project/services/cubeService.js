@@ -11,8 +11,12 @@ let cubesDb = undefined;
 // });
 fsProm.readFile(path.join(path.resolve('db'), 'cubes.json')).then(x => cubesDb = JSON.parse(x)).catch(x => console.log(x));
     
-function getAll() {
-    return cubesDb;
+function getAll(query) {
+    let result = cubesDb;
+    if (query.search) result = result.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()));
+    if (query.from) result = result.filter(x => x.level >= query.from);
+    if (query.to) result = result.filter(x => x.level <= query.to);
+    return result;
 };
 
 function getOne(id) {
