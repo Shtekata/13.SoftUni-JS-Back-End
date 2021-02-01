@@ -1,3 +1,4 @@
+import Accessory from '../models/Accessory.js';
 import Cube from '../models/Cube.js';
 
 function getAll(query) {
@@ -17,8 +18,21 @@ function create(data) {
     return cube.save();
 }
 
+async function attachAccessory(cubeId, accessoryId) {
+    const cube = await Cube.findById(cubeId);
+    const accessory = await Accessory.findById(accessoryId);
+
+    cube.accessories.push(accessory);
+    accessory.cubes.push(cube);
+    const resultCube = cube.save();
+    const resultAccessory = accessory.save();
+    
+    return Promise.all([resultCube, resultAccessory]);
+}
+
 export default {
     getAll,
     getOne,
-    create
+    create,
+    attachAccessory
 };
