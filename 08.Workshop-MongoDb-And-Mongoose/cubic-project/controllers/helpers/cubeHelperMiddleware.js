@@ -17,7 +17,7 @@ export const validateCubeFormInputs = (req, res, next) => {
         return res.render('create', {
             data,
             title: 'Create Cube',
-            nameMessage: 'Name have to be between 3 and 10 characters!'
+            nameMessage: 'Name have to be between 3 and 30 characters!'
         });
     }
     if (req.body.description.trim().length < 5 || req.body.description.trim().length > 500) {

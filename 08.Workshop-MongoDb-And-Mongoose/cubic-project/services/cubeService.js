@@ -1,7 +1,7 @@
 import Cube from '../models/Cube.js';
 
 function getAll(query) {
-    let result = Cube.getAll();
+    let result = Cube.find().lean();
     if (query.search) result = result.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()));
     if (query.from) result = result.filter(x => x.level >= query.from);
     if (query.to) result = result.filter(x => x.level <= query.to);
@@ -9,7 +9,7 @@ function getAll(query) {
 };
 
 function getOne(id) {
-    return Cube.getOne(id);
+    return Cube.findById(id).lean();
 }
 
 function create(data) {
