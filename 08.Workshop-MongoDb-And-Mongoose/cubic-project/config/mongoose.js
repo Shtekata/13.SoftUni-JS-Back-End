@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import connectConst from './consts.js';
+import config from './config.js';
 
 export default (app) => {
-    const uri = `mongodb+srv://${connectConst}@shtekatacluster.0dh5a.mongodb.net/cubicle?retryWrites=true&w=majority`;
+    const uri = config.DB_CONNECTION;
     mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const db = mongoose.connection;

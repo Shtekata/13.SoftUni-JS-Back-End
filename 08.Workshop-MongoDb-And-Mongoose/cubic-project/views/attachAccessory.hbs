@@ -6,7 +6,7 @@
     <form action="/cubes/{{cube._id}}/attach" method="POST">
       <label for="accessory">Accessories</label>
       <select id="accessory" name="accessory">
-        {{#each accessoaries}}
+        {{#each accessories}}
         <option value="{{_id}}">{{name}}</option>
         {{/each}}
       </select>

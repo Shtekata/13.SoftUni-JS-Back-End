@@ -19,16 +19,16 @@ router.post('/create', validator, (req, res) => {
 });
 
 router.get('/details/:cubeId', (req, res) => {
-    cubeService.getOne(req.params.cubeId)
+    const cube = cubeService.getOneWithAccessories(req.params.cubeId)
         .then(x => res.render('details', { title: 'Cube Details', cube: x }))
         .catch(x => res.status(500).end());
 });
 
-router.get('/:cubeId/attach', (req, res) => {
-    const cube = cubeService.getOne(req.params.cubeId);
-    const accessoaries = accessoryService.getAll();
-    Promise.all([cube, accessoaries])
-        .then(x => res.render('attachAccessory', { title: 'Attach Accessory', cube: x[0], accessoaries: x[1] }))
+router.get('/:cubeId/attach', async (req, res) => {
+    const cube = await cubeService.getOne(req.params.cubeId);
+    const accessories = accessoryService.getAllUnattached(cube.accessories);
+    Promise.all([cube, accessories])
+        .then(x => res.render('attachAccessory', { title: 'Attach Accessory', cube: x[0], accessories: x[1] }))
         .catch(x => res.status(500).end());
 });
 router.post('/:cubeId/attach', (req, res) => {

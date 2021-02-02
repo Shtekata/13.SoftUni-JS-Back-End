@@ -1,16 +1,19 @@
 import Accessory from '../models/Accessory.js';
 import Cube from '../models/Cube.js';
 
-function getAll(query) {
-    let result = Cube.find().lean();
-    if (query.search) result = result.filter(x => x.name.toLowerCase().includes(query.search.toLowerCase()));
-    if (query.from) result = result.filter(x => x.level >= query.from);
-    if (query.to) result = result.filter(x => x.level <= query.to);
+async function getAll(query) {
+    const result = Cube.find().setOptions({ lean: true })
+        .where({ name: { $regex: query.search, $options: 'i' } })
+        .where({ difficultyLevel: { $gte: query.from || 1, $lte: query.to || 6 } });
     return result;
 };
 
 function getOne(id) {
     return Cube.findById(id).lean();
+}
+
+function getOneWithAccessories(id) {
+    return Cube.findById(id).populate('accessories').lean();
 }
 
 function create(data) {
@@ -33,6 +36,7 @@ async function attachAccessory(cubeId, accessoryId) {
 export default {
     getAll,
     getOne,
+    getOneWithAccessories,
     create,
     attachAccessory
 };
