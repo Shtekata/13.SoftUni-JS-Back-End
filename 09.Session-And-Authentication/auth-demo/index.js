@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     <h1>My car: ${car}</h1>`);
 });
 
-app.get('/login/:username/:password', async (req, res) => {
+app.get('/register/:username/:password', async (req, res) => {
     const username = req.params.username;
     
     const plainTextPassword = req.params.password;
@@ -54,7 +54,7 @@ app.get('/login/:username/:password', async (req, res) => {
             .then(x => {
                 req.session.username = username;
                 req.session.password = password;
-                res.send('You have been logged!')
+                res.send('You are registered successfully!')
             })
             .catch(x => console.log(x.message));
     }
@@ -127,6 +127,13 @@ app.get('/compare/:password', (req, res) => {
         x.forEach(x => result.push(x));
         res.send(result);
     });
+})
+
+app.get('/login/:password', (req, res) => {
+    bcrypt.compare(req.params.password, req.session.password, (e, x) => {
+        if (e) console.log(e.message);
+        x ? res.send('You are logged!') : res.send('Credentials do not match!');
+    })
 })
 
 app.listen(config.PORT, x => console.log(`Server is listening on port ${config.PORT}...`));
