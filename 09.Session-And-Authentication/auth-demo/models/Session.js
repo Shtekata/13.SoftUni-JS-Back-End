@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const sessionScheme = new mongoose.Schema({
+    _id: { type: String, required: true, uniq: true },
     username: { type: String,  minlength:3, maxlength: 50 },
     coko: { type: String, minlength:3, maxlength: 50 },
     car: { type: String, minlength:3, maxlength:50 },
