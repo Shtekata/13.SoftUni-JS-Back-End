@@ -5,7 +5,8 @@ const sessionScheme = new mongoose.Schema({
     username: { type: String,  minlength:3, maxlength: 50 },
     coko: { type: String, minlength:3, maxlength: 50 },
     car: { type: String, minlength: 3, maxlength: 50 },
-    password: { type: String }
+    password: { type: String },
+    token: { type: String }
 });
 
 sessionScheme.methods.getInfo = function () { return `My name is ${this.username}` };

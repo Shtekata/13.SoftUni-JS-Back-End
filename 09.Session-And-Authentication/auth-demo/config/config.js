@@ -1,9 +1,9 @@
-import connectConst from './consts.js';
+import consts from './consts.js';
 
 const config = {
     development: {
         PORT: process.env.PORT || 5000,
-        DB_CONNECTION: `mongodb+srv://${connectConst}@shtekatacluster.0dh5a.mongodb.net/auth-demo?retryWrites=true&w=majority`
+        DB_CONNECTION: `mongodb+srv://${consts.connectionPass}@shtekatacluster.0dh5a.mongodb.net/auth-demo?retryWrites=true&w=majority`
     },
     production: {
         PORT: process.env.PORT || 80,

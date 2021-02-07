@@ -4,6 +4,8 @@ import expressConfig from './config/express.js';
 import mongooseConfig from './config/mongoose.js';
 import Session from './models/Session.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import consts from './config/consts.js';
 
 const app = express();
 expressConfig(app);
@@ -35,12 +37,12 @@ app.get('/register/:username/:password', async (req, res) => {
     const saltRounds = 9;
     const password = await new Promise((resolve, reject) => {
         bcrypt.genSalt(saltRounds, (e, x) => {
-        if (e) console.log(e.message);
-        bcrypt.hash(plainTextPassword, x, (e, x) => {
             if (e) console.log(e.message);
-            resolve(x);
+            bcrypt.hash(plainTextPassword, x, (e, x) => {
+                if (e) console.log(e.message);
+                resolve(x);
+            });
         });
-    }) 
     });
 
     if (username) {
@@ -71,7 +73,8 @@ app.get('/coko/:moko', async (req, res) => {
             req.session.user = true;
         };
         Session.findByIdAndUpdate(req.sessionID, { coko }, { useFindAndModify: false })
-            .then(x => { req.session.coko = coko; res.redirect('/') });
+            .then(x => { req.session.coko = coko; res.redirect('/') })
+            .catch(x => console.log(x.message));;
     } else res.redirect('/');
 })
 
@@ -85,7 +88,8 @@ app.get('/car/:car', async (req, res) => {
             req.session.user = true;
         };
         Session.findByIdAndUpdate(req.sessionID, { car }, { useFindAndModify: false })
-            .then(x => { req.session.car = car; res.redirect('/') });
+            .then(x => { req.session.car = car; res.redirect('/') })
+            .catch(x => console.log(x.message));;
     } else res.redirect('/');
 })
 
@@ -129,11 +133,99 @@ app.get('/compare/:password', (req, res) => {
     });
 })
 
-app.get('/login/:password', (req, res) => {
+app.get('/login/:username/:password', (req, res) => {
     bcrypt.compare(req.params.password, req.session.password, (e, x) => {
         if (e) console.log(e.message);
-        x ? res.send('You are logged!') : res.send('Credentials do not match!');
-    })
-})
+        const result = req.session.username === req.params.username && x;
+        res.send(result ? 'You are logged!' : 'Credentials do not match!');
+    });
+});
+
+app.get('/token/create', (req, res) => {
+    res.send(`
+    <form action='/token/create' method='post'>
+    <div>
+    <label>Username:</label>
+    <input type='text' name='username'/>
+    </div>
+    <div>
+    <label>Password:</label>
+    <input type='password' name='password'/>
+    </div>
+    <div>
+    <input type='submit' value='Log In'/>
+    </div>
+    </form>
+    `);
+});
+
+app.post('/token/create', async (req, res) => {
+    const password = await new Promise((resolve, reject) => {
+        bcrypt.hash(req.body.password, 9, (e, x) => {
+            resolve(x);
+        });
+    });
+    const payloads = {
+        _id: req.sessionID,
+        username: req.body.username,
+        password
+    };
+    const options = { expiresIn: '2d' };
+    const secret = consts.secretKey;
+
+    const token = jwt.sign(payloads, secret, options);
+
+    if (!req.session.user) {
+        const _id = req.sessionID;
+        const session = new Session({ _id });
+        await session.save().catch(x => console.log(x.message));
+        req.session.user = true;
+    };
+    Session.findByIdAndUpdate(req.sessionID, { token }, { useFindAndModify: false })
+        .then(x => {
+            req.session.token = token;
+            // res.json({ token });
+            // res.setHeader('jwt', token);
+            res.cookie('jwt', token);
+            res.redirect('/token/show')
+        }).catch(x => console.log(x.message));
+});
+
+app.get('/token/show', (req, res) => {
+    const token = req.cookies.jwt;
+    const decodedToken = jwt.verify(token, consts.secretKey);
+    res.send(decodedToken);
+});
+
+app.get('/token/login', (req, res) => {
+    res.send(`
+    <form action='/token/login' method='post'>
+    <div>
+    <label>Username:</label>
+    <input type='text' name='username'/>
+    </div>
+    <div>
+    <label>Password:</label>
+    <input type='password' name='password'/>
+    </div>
+    <div>
+    <input type='submit' value='Log In'/>
+    </div>
+    </form>
+    `);
+});
+
+app.post('/token/login', (req, res) => {
+    const token = req.cookies.jwt;
+    const decodedToken = jwt.verify(token, consts.secretKey);
+    
+    let result;
+    bcrypt.compare(req.body.password, decodedToken.password, (e, x) => {
+        x && req.body.username === decodedToken.username ? result = true : result = false;
+        result
+            ? res.send(`You are logged in! Welcome ${decodedToken.username}`)
+            : res.status(400).send('Invalid credentials!');
+    });
+});
 
 app.listen(config.PORT, x => console.log(`Server is listening on port ${config.PORT}...`));
