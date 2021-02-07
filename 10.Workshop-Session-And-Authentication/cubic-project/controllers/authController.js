@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import authService from '../services/authService.js';
+import config from '../config/index.js';
 
 const router = Router();
+const COOKIE_NAME = config.COOKIE_NAME;
 
 router.get('/login', (req, res) => {
     res.render('login', { title: 'Login Page' });
@@ -11,7 +13,7 @@ router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
     authService.login({ username, password })
-        .then(x => { res.cookie('USER_SESSION', x); res.redirect('/cubes'); })
+        .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/cubes') })
         .catch(x => res.render('login', { title: 'Login Page', error: x.message }));
 })
 
