@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-
 body {
     margin: 0;
     padding: 0;
@@ -90,7 +89,6 @@ p.name {
     border-bottom: 1px solid #2b415433;
 }
 
-
 button, main a.btn {
     border: none;
     padding: 8px;
@@ -105,8 +103,8 @@ button, main a.btn {
     color: white;
 }
 
-.details a.btn{
-    width: 28%;
+.details a.btn {
+    width: 18%;
 }
 
 button:hover {
@@ -115,7 +113,7 @@ button:hover {
     cursor: pointer;
 }
 
-a.btn:hover{
+a.btn:hover {
     text-decoration: underline;
 }
 
@@ -148,7 +146,6 @@ div.about {
     padding: 3em;
 }
 
-
 div.about a {
     text-decoration: none;
     color: #0B2133;
@@ -163,11 +160,7 @@ form label {
     border-top-right-radius: 4px;
 }
 
-input[type=text],
-input[type=number],
-input[type=password],
-select,
-textarea {
+input[type=text], input[type=number], input[type=password], select, textarea {
     width: 100%;
     display: inline-block;
     border: 1px solid #ccc;
@@ -229,16 +222,16 @@ span.error {
     display: block;
 }
 
-img#sadFaceImg{
+img#sadFaceImg {
     display: block;
     margin: 0 auto;
 }
 
-h2{
+h2 {
     text-align: center;
 }
 
-.accessories .accessory{
+.accessories .accessory {
     display: inline-block;
     background-color: #f3f3f2;
     width: 20%;
@@ -246,7 +239,7 @@ h2{
     margin: 1%;
 }
 
-.accessories, .italic{
+.accessories, .italic {
     text-align: center;
     font-style: italic;
 }
@@ -266,7 +259,6 @@ footer {
     from {
         opacity: 1;
     }
-
     to {
         opacity: 0;
     }
@@ -276,7 +268,6 @@ footer {
     from {
         opacity: 1;
     }
-
     to {
         opacity: 0;
     }

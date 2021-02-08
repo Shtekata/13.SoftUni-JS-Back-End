@@ -16,8 +16,8 @@ function getOneWithAccessories(id) {
     return Cube.findById(id).populate('accessories').lean();
 }
 
-function create(data) {
-    const cube = new Cube(data);
+function create(userId, data) {
+    const cube = new Cube({ creator: userId, ...data });
     return cube.save();
 }
 
@@ -33,10 +33,15 @@ async function attachAccessory(cubeId, accessoryId) {
     return Promise.all([resultCube, resultAccessory]);
 }
 
+function updateOne(cubeId,cubeData) {
+    return Cube.findByIdAndUpdate({ _id: cubeId }, cubeData, { useFindAndModify: false });
+}
+
 export default {
     getAll,
     getOne,
     getOneWithAccessories,
     create,
-    attachAccessory
+    attachAccessory,
+    updateOne
 };
