@@ -37,11 +37,16 @@ function updateOne(cubeId,cubeData) {
     return Cube.findByIdAndUpdate({ _id: cubeId }, cubeData, { useFindAndModify: false });
 }
 
+function deleteOne(cubeId) {
+    return Cube.findByIdAndDelete(cubeId);
+}
+
 export default {
     getAll,
     getOne,
     getOneWithAccessories,
     create,
     attachAccessory,
-    updateOne
+    updateOne,
+    deleteOne
 };
