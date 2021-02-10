@@ -3,15 +3,22 @@
   <div class="form">
     <form action='/auth/register' method="POST">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" value="{{username}}">
+      <input type="text" id="username" name="username"
+        value="{{username}}">
       <label for="password">Password</label>
       <input type="password" id="password" name="password">
-
       <label for="repeatPassword">Re-Password</label>
+      <input type="password" id="repeatPassword" name="repeatPassword">
       {{#if error}}
       <span class="error">{{error}}</span>
       {{/if}}
-      <input type="password" id="repeatPassword" name="repeatPassword">
+      {{#if errors}}
+      {{#each errors}}
+      {{!-- <span class="error">value: {{this.value}}, msg: {{this.msg}}, param:
+        {{this.param}}, location: {{this.location}}</span> --}}
+      <span class="error">{{msg}}</span>
+      {{/each}}
+      {{/if}}
       <input type="submit" value="Register">
     </form>
   </div>

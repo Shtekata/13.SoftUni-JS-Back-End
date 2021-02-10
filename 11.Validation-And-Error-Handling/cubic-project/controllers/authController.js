@@ -4,6 +4,7 @@ import config from '../config/index.js';
 import isGuest from '../middlewares/isGuest.js';
 import isAuthenticated from '../middlewares/isAuthenticated.js';
 import passValidator from '../middlewares/passwords.js';
+import { body, check, validationResult } from 'express-validator';
 
 const router = Router();
 const COOKIE_NAME = config.COOKIE_NAME;
@@ -22,18 +23,28 @@ router.post('/login',isGuest , (req, res) => {
 router.get('/register', isGuest, (req, res) => {
     res.render('register', { title: 'Register Page' });
 });
-router.post('/register', isGuest, passValidator, (req, res) => {
-    const { username, password, repeatPassword } = req.body;
+router.post('/register',
+    isGuest,
+    // passValidator,
+    // check('Username', 'Specify username').notEmpty(),
+    // check('password', 'Password have to be between 5 and 10 characters!').isLength({ min: 5, max: 10 }),
+    body('Username', 'Specify username').notEmpty(),
+    body('password', 'Password have to be between 5 and 10 characters!').isLength({ min: 5, max: 10 }),
+    (req, res) => {
+        const { username, password, repeatPassword } = req.body;
     
-    if (password !== repeatPassword)
-        return res.render('register', { title: 'Register Page', error: 'Password missmatch!' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.render('register', { title: 'Register Page', errors: errors.array() });
+        
+        if (password !== repeatPassword)
+            return res.render('register', { title: 'Register Page', error: 'Password missmatch!' });
        
-    authService.register({ username, password })
-        .then(x => {
-            res.render('login', { title: 'Login Page', user: x.username })
-        })
-        .catch(x => res.render('register', { title: 'Register Page', error: x.message }));
-})
+        authService.register({ username, password })
+            .then(x => {
+                res.render('login', { title: 'Login Page', user: x.username })
+            })
+            .catch(x => res.render('register', { title: 'Register Page', error: x.message }));
+    });
 
 router.get('/logout', isAuthenticated, (req, res) => {
     res.clearCookie(COOKIE_NAME);
