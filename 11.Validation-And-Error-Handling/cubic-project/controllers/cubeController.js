@@ -6,76 +6,76 @@ import isAuthenticated from '../middlewares/isAuthenticated.js';
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
     cubeService.getAll(req.query)
-        .then(x => res.render('home', { title: 'Cubicle', cubes: x }))
-        .catch((x) => { console.log(x); res.status(500).end() });
+        .then(x => res.render('home', { title: 'Cubicle', cubes: x, error: res.locals.error }))
+        .catch(error => next(error));
 });
 
 router.get('/create', isAuthenticated, (req, res) => res.render('create', { title: 'Create Cube' }));
-router.post('/create', isAuthenticated, validator, (req, res) => {
+router.post('/create', isAuthenticated, validator, (req, res, next) => {
     cubeService.create(req.user._id, req.body)
         .then(x => res.redirect('/cubes'))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 });
 
-router.get('/details/:cubeId', (req, res) => {
+router.get('/details/:cubeId', (req, res, next) => {
     const cube = cubeService.getOneWithAccessories(req.params.cubeId)
         .then(x => {
             let isOwner = false;
-            if (x.creator == req.user._id) isOwner = true;
+            if (x.creator == req.user?._id) isOwner = true;
             res.render('details', { title: 'Cube Details', cube: x, isOwner })
         })
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 });
 
-router.get('/:cubeId/attach', isAuthenticated, async (req, res) => {
+router.get('/:cubeId/attach', isAuthenticated, async (req, res, next) => {
     const cube = await cubeService.getOne(req.params.cubeId);
     const accessories = accessoryService.getAllUnattached(cube.accessories);
     Promise.all([cube, accessories])
         .then(x => res.render('attachAccessory', { title: 'Attach Accessory', cube: x[0], accessories: x[1] }))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 });
-router.post('/:cubeId/attach', isAuthenticated, (req, res) => {
+router.post('/:cubeId/attach', isAuthenticated, (req, res, next) => {
     cubeService.attachAccessory(req.params.cubeId, req.body.accessory)
         .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 })
 
-router.get('/:cubeId/edit', isAuthenticated, (req, res) => {
+router.get('/:cubeId/edit', isAuthenticated, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator == req.user._id) res.render('editCube', { title: 'Edit Cube Page', x });
             else res.redirect('/cubes');
         })
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 })
-router.post('/:cubeId/edit', isAuthenticated, validator, (req, res) => {
+router.post('/:cubeId/edit', isAuthenticated, validator, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator == req.user._id) return cubeService.updateOne(req.params.cubeId, req.body);
             return;
         })
         .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 })
 
-router.get('/:cubeId/delete', isAuthenticated, (req, res) => {
+router.get('/:cubeId/delete', isAuthenticated, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator?.toString() === req.user._id) res.render('deleteCube', { title: 'Delete Cube Page', x });
             else res.redirect('/cubes');
         })
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 })
-router.post('/:cubeId/delete', isAuthenticated, (req, res) => {
+router.post('/:cubeId/delete', isAuthenticated, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator != req.user._id) return;
             return cubeService.deleteOne(req.params.cubeId)
         })
         .then(x => res.redirect('/cubes'))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
 })
 
 export default router;

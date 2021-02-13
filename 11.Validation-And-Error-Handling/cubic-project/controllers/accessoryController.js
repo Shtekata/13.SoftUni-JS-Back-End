@@ -8,7 +8,7 @@ router.get('/create', (req, res) => res.render('createAccessory', { title: 'Crea
 router.post('/create', validator, (req, res) => {
     accessoryService.create(req.body)
         .then(x => res.redirect('/cubes'))
-        .catch(x => res.status(500).end());
+        .catch(error => next(error));
     res.redirect('/cubes');
 });
 

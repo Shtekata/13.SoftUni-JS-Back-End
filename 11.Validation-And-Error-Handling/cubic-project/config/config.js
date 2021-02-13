@@ -6,15 +6,16 @@ const config = {
         DB_CONNECTION: `mongodb+srv://${connectConst}@shtekatacluster.0dh5a.mongodb.net/cubicle?retryWrites=true&w=majority`,
         SALT_ROUNDS: 9,
         SECRET: 'geshlandia',
-        COOKIE_NAME: 'USER_SESSION'
+        COOKIE_NAME: 'USER_SESSION',
+        ENGLISH_ALPHANUMERIC_PATTERN: /^[a-zA-Z0-9]+$/
     },
     production: {
         PORT: process.env.PORT || 80,
         DB_CONNECTION: 'mongodb://localhost:27017/cubicle',
         SALT_ROUNDS: 10,
         SECRET: 'geshlandia',
-        COOKIE_NAME: 'USER_SESSION'
-
+        COOKIE_NAME: 'USER_SESSION',
+        ENGLISH_ALPHANUMERIC_PATTERN: /^[a-zA-Z0-9]+$/
     }
 };
 

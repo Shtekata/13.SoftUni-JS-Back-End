@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import authService from '../services/authService.js';
-import config from '../config/index.js';
+import config from '../config/config.js';
 import isGuest from '../middlewares/isGuest.js';
 import isAuthenticated from '../middlewares/isAuthenticated.js';
 import passValidator from '../middlewares/passwords.js';
@@ -17,7 +17,7 @@ router.post('/login', isGuest, (req, res) => {
 
     authService.login({ username, password })
         .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/cubes') })
-        .catch(x => res.render('login', { title: 'Login Page', error: x.message }));
+        .catch(x => res.render('login', { title: 'Login Page', error: x }));
 });
 
 router.get('/register', isGuest, (req, res) => {
@@ -40,14 +40,15 @@ router.post('/register',
         // if (!errors.isEmpty()) return res.render('register', { title: 'Register Page', errors: errors.array() });
         
         if (password !== repeatPassword)
-            return res.render('register', { title: 'Register Page', error: 'Password missmatch!' });
+            // return res.render('register', { title: 'Register Page', error: 'Password missmatch!' });
+            return res.render('register', { title: 'Register Page', error: { message: 'Password missmatch!'} });
        
         authService.register({ username, password })
             .then(x => {
                 res.render('login', { title: 'Login Page', user: x?.username })
             })
-            // .catch(x => res.render('register', { title: 'Register Page', error: x.message }));
-            .catch(x => res.render('register', { title: 'Register Page', errors: x }));
+            // .catch(x => res.render('register', { title: 'Register Page', errors: x }));
+            .catch(x => res.render('register', { title: 'Register Page', error: x }));
     });
 
 router.get('/logout', isAuthenticated, (req, res) => {

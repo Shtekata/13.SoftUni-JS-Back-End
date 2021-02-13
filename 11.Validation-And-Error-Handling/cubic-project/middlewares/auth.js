@@ -1,4 +1,4 @@
-import config from '../config/index.js';
+import config from '../config/config.js';
 import jwt from 'jsonwebtoken';
 
 const COOKIE_NAME = config.COOKIE_NAME;
@@ -10,6 +10,7 @@ export default function () {
         if (token) {
             jwt.verify(token, SECRET, (e, x) => {
                 if (e) res.clearCookie(COOKIE_NAME);
+                if (!x._id) return;
                 else {
                     req.user = x;
                     res.locals.user = x;

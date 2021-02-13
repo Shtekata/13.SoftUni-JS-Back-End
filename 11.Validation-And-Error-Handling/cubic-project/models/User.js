@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import config from '../config/index.js';
+import config from '../config/config.js';
 
 const SALT_ROUNDS = config.SALT_ROUNDS;
+const ENGLISH_ALPHANUMERIC_PATTERN = config.ENGLISH_ALPHANUMERIC_PATTERN;
 
 const userSchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
@@ -12,14 +13,18 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minlength: 5,
         validate: {
-            validator: (x) => {
-                const result = /^[a-zA-Z0-9]+$/.test(x);
-                return result;
-            },
+            validator: (x) => ENGLISH_ALPHANUMERIC_PATTERN.test(x),
             message: (x) => `${x.value} schould consist only english letters and digits!`
         }
     },
-    password: { type: String, required: [true, 'Password is required!'] },
+    password: {
+        type: String, required: [true, 'Password is required!'],
+        minlength: 8,
+        validate: {
+            validator: (x) => ENGLISH_ALPHANUMERIC_PATTERN.test(x),
+            message: (x) => `Password schould consist only english letters and digits!`
+        },
+    },
     roles: [{ type: String }]
 });
 

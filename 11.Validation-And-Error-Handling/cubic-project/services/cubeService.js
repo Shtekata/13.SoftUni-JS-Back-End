@@ -18,7 +18,17 @@ function getOneWithAccessories(id) {
 
 function create(userId, data) {
     const cube = new Cube({ creator: userId, ...data });
-    return cube.save();
+    return new Promise((resolve, reject) => {
+        cube.save()
+        .then(x => resolve(x))
+        .catch(x => {
+            let error = {};
+            Object.keys(x.errors).map(y =>
+                error.message = error.message ? `${error.message}\n${x.errors[y].message}` : x.errors[y].message
+            );
+            reject(error);
+        });
+    }) 
 }
 
 async function attachAccessory(cubeId, accessoryId) {

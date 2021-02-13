@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import config from './index.js';
+import config from './config.js';
 
 export default (app) => {
     const uri = config.DB_CONNECTION;

@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-import config from '../config/index.js';
+import config from '../config/config.js';
 import jwt from 'jsonwebtoken';
 
 const SALT_ROUNDS = config.SALT_ROUNDS;
@@ -20,24 +20,25 @@ const register = ({ username, password }) => {
             return user.save();
         })
         .catch(x => {
-            // let result = {};
-            // Object.keys(x.errors).map(y =>
-            //     result.message = result.message ? `${result.message}\n${x.errors[y].message}` : x.errors[y].message
-            // );
-            const result = Object.keys(x.errors).map(y => ({ msg: x.errors[y].message }));
-            throw result;
+            // const result = Object.keys(x.errors).map(y => ({ msg: x.errors[y].message }));
+            let error = {};
+            Object.keys(x.errors).map(y =>
+                error.message = error.message ? `${error.message}\n${x.errors[y].message}` : x.errors[y].message
+            );
+            throw error;
         })
 };
 
-const login = ({ username, password }) => {
-    return User.findOne({ username }).then(x => {
+const login = ({ username, password }) => User.findOne({ username })
+    .then(async x => {
         if (!x) throw { message: 'User with given username do not exists!' };
-        return bcrypt.compare(password, x.password).then(y => {
-            if (!y) throw { message: 'Password does not match!' };
-            return jwt.sign({ _id: x._id, username: x.username, roles: x.roles }, SECRET);
-        })
-    })
-}
+        const y = await bcrypt.compare(password, x.password);
+        x, y;
+    }).then(z => {
+        if (!z.y) throw { message: 'Password does not match!' };
+        return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);
+    });
+
 
 export default {
     register,
