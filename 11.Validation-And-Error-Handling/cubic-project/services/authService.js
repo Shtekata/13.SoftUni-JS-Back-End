@@ -33,7 +33,7 @@ const login = ({ username, password }) => User.findOne({ username })
     .then(async x => {
         if (!x) throw { message: 'User with given username do not exists!' };
         const y = await bcrypt.compare(password, x.password);
-        x, y;
+        return { x, y };
     }).then(z => {
         if (!z.y) throw { message: 'Password does not match!' };
         return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);

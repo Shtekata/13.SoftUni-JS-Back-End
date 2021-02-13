@@ -9,14 +9,15 @@ const router = Router();
 router.get('/', (req, res, next) => {
     cubeService.getAll(req.query)
         .then(x => res.render('home', { title: 'Cubicle', cubes: x, error: res.locals.error }))
-        .catch(error => next(error));
+        // .catch(error => next(error))
+        .catch(next);
 });
 
 router.get('/create', isAuthenticated, (req, res) => res.render('create', { title: 'Create Cube' }));
 router.post('/create', isAuthenticated, validator, (req, res, next) => {
     cubeService.create(req.user._id, req.body)
         .then(x => res.redirect('/cubes'))
-        .catch(error => next(error));
+        .catch(next);
 });
 
 router.get('/details/:cubeId', (req, res, next) => {
@@ -26,7 +27,7 @@ router.get('/details/:cubeId', (req, res, next) => {
             if (x.creator == req.user?._id) isOwner = true;
             res.render('details', { title: 'Cube Details', cube: x, isOwner })
         })
-        .catch(error => next(error));
+        .catch(next);
 });
 
 router.get('/:cubeId/attach', isAuthenticated, async (req, res, next) => {
@@ -34,12 +35,12 @@ router.get('/:cubeId/attach', isAuthenticated, async (req, res, next) => {
     const accessories = accessoryService.getAllUnattached(cube.accessories);
     Promise.all([cube, accessories])
         .then(x => res.render('attachAccessory', { title: 'Attach Accessory', cube: x[0], accessories: x[1] }))
-        .catch(error => next(error));
+        .catch(next);
 });
 router.post('/:cubeId/attach', isAuthenticated, (req, res, next) => {
     cubeService.attachAccessory(req.params.cubeId, req.body.accessory)
         .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
-        .catch(error => next(error));
+        .catch(next);
 })
 
 router.get('/:cubeId/edit', isAuthenticated, (req, res, next) => {
@@ -48,7 +49,7 @@ router.get('/:cubeId/edit', isAuthenticated, (req, res, next) => {
             if (x.creator == req.user._id) res.render('editCube', { title: 'Edit Cube Page', x });
             else res.redirect('/cubes');
         })
-        .catch(error => next(error));
+        .catch(next);
 })
 router.post('/:cubeId/edit', isAuthenticated, validator, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
@@ -57,7 +58,7 @@ router.post('/:cubeId/edit', isAuthenticated, validator, (req, res, next) => {
             return;
         })
         .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
-        .catch(error => next(error));
+        .catch(next);
 })
 
 router.get('/:cubeId/delete', isAuthenticated, (req, res, next) => {
@@ -66,7 +67,7 @@ router.get('/:cubeId/delete', isAuthenticated, (req, res, next) => {
             if (x.creator?.toString() === req.user._id) res.render('deleteCube', { title: 'Delete Cube Page', x });
             else res.redirect('/cubes');
         })
-        .catch(error => next(error));
+        .catch(next);
 })
 router.post('/:cubeId/delete', isAuthenticated, (req, res, next) => {
     cubeService.getOne(req.params.cubeId)
@@ -75,7 +76,7 @@ router.post('/:cubeId/delete', isAuthenticated, (req, res, next) => {
             return cubeService.deleteOne(req.params.cubeId)
         })
         .then(x => res.redirect('/cubes'))
-        .catch(error => next(error));
+        .catch(next);
 })
 
 export default router;

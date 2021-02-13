@@ -10,6 +10,7 @@ router.use('/', homeController);
 router.use('/auth', authController);
 router.use('/cubes', cubeController);
 router.use('/accessories', isAuthenticated, accessoryController);
+router.get('/500', (req, res) => res.render('500', { title: 'Server Error', error: req.session.error }));
 router.get('*', (req, res) => res.render('404', { title: 'Page Not Found' }));
 
 export default router;

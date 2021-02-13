@@ -265,6 +265,10 @@ footer {
     text-decoration: underline;
 }
 
+.err500 {
+    text-align: center;
+}
+
 /*Animations & Transitions
 */
 
