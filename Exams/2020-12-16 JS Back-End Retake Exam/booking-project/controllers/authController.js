@@ -35,7 +35,7 @@ router.post('/register',
     body('email', 'Your email is not valid')
         // .optional({ checkFalsy: true })
         .isEmail(),
-    (req, res) => {
+    (req, res, next) => {
         const { username, password, repeatPassword, email } = req.body;
 
         if (!validationResult(req).isEmpty()) {
@@ -47,7 +47,9 @@ router.post('/register',
         
         authService.register({ username, password, email })
             .then(x => {
-                res.render('login', { title: 'Login Page', user: x?.username })
+                authService.login({ username: x.username, password })
+                    .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/cubes') })
+                    .catch(next);
             })
             .catch(x => res.render('register', { title: 'Register Page', error: x }));
     });
