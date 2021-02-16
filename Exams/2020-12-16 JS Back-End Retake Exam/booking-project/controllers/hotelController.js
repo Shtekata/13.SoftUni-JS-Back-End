@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/', (req, res, next) => {
     hotelService.getAll(req.query)
-        .then(x => res.render('home', { title: 'BookingUni', hotels: x, error: res.locals.error }))
+        .then(x => { res.render('home', { title: 'BookingUni', hotels: x, infoMsg: 'Welcome!' }) })
         .catch(next);
 });
 

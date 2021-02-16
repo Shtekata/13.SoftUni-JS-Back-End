@@ -12,7 +12,6 @@ export default function () {
                 if (e) res.clearCookie(COOKIE_NAME);
                 if (!x._id) return;
                 else {
-                    req.user = x;
                     res.locals.user = x;
                     res.locals.isAuthenticated = true;
                 }

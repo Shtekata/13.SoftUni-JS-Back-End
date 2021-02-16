@@ -4,19 +4,22 @@ import config from '../config/config.js';
 import isGuest from '../middlewares/isGuest.js';
 import isAuth from '../middlewares/isAuth.js';
 import { body, validationResult } from 'express-validator';
+import { ENGLISH_ALPHANUMERIC_PATTERN } from '../config/constants.js';
 
+let isLoading;
+let infoMsg;
 const router = Router();
 const COOKIE_NAME = config.COOKIE_NAME;
-const ENGLISH_ALPHANUMERIC_PATTERN = config.ENGLISH_ALPHANUMERIC_PATTERN;
 
 router.get('/login', isGuest, (req, res) => {
-    res.render('login', { title: 'Login Page' });
+    res.render('login', { title: 'Login Page', isLoading: false });
 });
 router.post('/login', isGuest, (req, res) => {
+    res.locals.isLoading = true;
     const { username, password } = req.body;
     authService.login({ username, password })
-        .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/hotels') })
-        .catch(x => res.render('login', { title: 'Login Page', error: x }));
+        .then(x => { res.cookie(COOKIE_NAME, x);  res.redirect('/hotels') })
+        .catch(x => res.render('login', { title: 'Login Page', err: x }));
 });
 
 router.get('/register', isGuest, (req, res) => {
@@ -39,10 +42,10 @@ router.post('/register',
         const { username, password, email } = req.body;
 
         if (!validationResult(req).isEmpty()) {
-            let error = {};
+            let err = {};
             const errors = validationResult(req).array();
-            errors.forEach(x => error.message = error.message ? `${error.message}\n${x.msg}` : x.msg);
-            return res.render('register', { title: 'Register Page', error })
+            errors.forEach(x => err.message = err.message ? `${err.message}\n${x.msg}` : x.msg);
+            return res.render('register', { title: 'Register Page', err, username, email })
         };
         
         authService.register({ username, password, email })

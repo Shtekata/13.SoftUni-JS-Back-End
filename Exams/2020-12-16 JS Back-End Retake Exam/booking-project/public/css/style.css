@@ -108,7 +108,7 @@ footer {
 }
 
 .background-img {
-    background: url("../../static/img/hotel.jpg") no-repeat;
+    background: url("/img/hotel.jpg") no-repeat;
     background-size: cover;
     margin: auto;
     min-height: 500px;
@@ -178,6 +178,7 @@ footer {
     color: red;
     background: none;
 }
+
 .remove:hover {
     transform: scale(1.1);
 }
@@ -197,6 +198,7 @@ footer {
 .edit:hover {
     transform: scale(1.1);
 }
+
 .book {
     list-style-type: none;
     display: inline-block;
@@ -213,7 +215,7 @@ footer {
     transform: scale(1.1);
 }
 
-.green{
+.green {
     color: green;
 }
 
@@ -335,6 +337,7 @@ footer {
 .details {
     margin: 0;
 }
+
 .seat-form {
     display: inline-flex;
 }
@@ -392,6 +395,8 @@ h3 {
 }
 
 .notification {
+    animation: fadeOut 1s forwards;
+    animation-delay: 3s;
     position: fixed;
     z-index: 10;
     top: 6rem;
@@ -468,13 +473,13 @@ h3 {
     outline: none;
 }
 
-.flex > input, .flex > div {
+.flex>input, .flex>div {
     width: 55%;
     text-align: left;
     margin: .5em;
 }
 
-.flex > div > input {
+.flex>div>input {
     width: 77%;
 }
 
@@ -488,4 +493,22 @@ h3 {
 
 .green-button {
     background-color: green;
+}
+
+@-webkit-keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }

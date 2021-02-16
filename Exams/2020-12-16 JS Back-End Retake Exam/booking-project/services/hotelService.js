@@ -1,11 +1,10 @@
 import Accessory from '../models/Accessory.js';
 import Hotel from '../models/Hotel.js';
 
-async function getAll(query) {
-    const result = Hotel.find().setOptions({ lean: true })
+function getAll(query) {
+    return Hotel.find().setOptions({ lean: true })
         .where({ name: { $regex: query.search || '', $options: 'i' } })
         .sort('freeRooms');
-    return result;
 };
 
 function getOne(id) {
