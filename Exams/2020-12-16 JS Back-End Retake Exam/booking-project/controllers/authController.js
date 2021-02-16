@@ -15,7 +15,7 @@ router.get('/login', isGuest, (req, res) => {
 router.post('/login', isGuest, (req, res) => {
     const { username, password } = req.body;
     authService.login({ username, password })
-        .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/cubes') })
+        .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/hotels') })
         .catch(x => res.render('login', { title: 'Login Page', error: x }));
 });
 
@@ -28,7 +28,7 @@ router.post('/register',
     body('password').trim()
         .isLength({ min: 6 }).withMessage('Password have to be at least 6 chars long!')
         .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage('Password schould consist only english letters and digits!'),
-    body('repeatPassword').custom((value, { req }) => {
+    body('rePassword').custom((value, { req }) => {
         if (value === req.body.password) return true;
         throw 'Password confurmation does not match password!';
     }),
@@ -36,7 +36,7 @@ router.post('/register',
         // .optional({ checkFalsy: true })
         .isEmail(),
     (req, res, next) => {
-        const { username, password, repeatPassword, email } = req.body;
+        const { username, password, email } = req.body;
 
         if (!validationResult(req).isEmpty()) {
             let error = {};
@@ -48,7 +48,7 @@ router.post('/register',
         authService.register({ username, password, email })
             .then(x => {
                 authService.login({ username: x.username, password })
-                    .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/cubes') })
+                    .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/hotels') })
                     .catch(next);
             })
             .catch(x => res.render('register', { title: 'Register Page', error: x }));
@@ -56,7 +56,7 @@ router.post('/register',
 
 router.get('/logout', isAuth, (req, res) => {
     res.clearCookie(COOKIE_NAME);
-    res.redirect('/cubes');
+    res.redirect('/hotels');
 });
 
 export default router;

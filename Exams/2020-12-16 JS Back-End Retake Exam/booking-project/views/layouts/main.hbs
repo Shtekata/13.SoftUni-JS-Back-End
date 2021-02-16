@@ -3,34 +3,50 @@
     <head>
         <meta charset="UTF-8">
         <title>{{title}}</title>
-        <link rel="stylesheet" type="text/css" href="/css/site.css">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
         <link rel='shortcut icon' type='image/x-icon'
-            href='/images/favicon.png'/>
+            href='/images/favicon.ico'/>
     </head>
     <body>
-        <div class="container">
-            <header>
-                <ul>
-                    <li><img class="logo" src="/images/logo.png"></li>
-                    <li><a href="/cubes">Browse</a></li>
-                    <li><a href="/about">About</a></li>
-                    {{#if isAuthenticated}}
-                    <li><a href="/cubes/create">Add a Cube</a></li>
-                    <li><a href="/accessories/create">Add Accessory</a></li>
-                    <li><a href="/auth/logout">Logout</a></li>
-                    {{else}}
-                    <li><a href="/auth/login">Login</a></li>
-                    <li><a href="/auth/register">Register</a></li>
-                    {{/if}}
-                </ul>
-            </header>
-            {{#if error}}
-            <div class="notification">
-                <p>{{error.message}}</p>
+        <div id="container">
+            <div>
+                {{#if isLoading}}
+                <div class="notification loadingBox">
+                    Loading …
+                </div>
+                {{/if}}
+                {{#if infoMsg}}
+                <div class="notification infoBox">
+                    <span>Info</span>
+                </div>
+                {{/if}}
+                {{#if error}}
+                <div class="notification errorBox">
+                    <span>Error</span>
+                </div>
+                {{/if}}
             </div>
-            {{/if}}
+            <nav>
+                <div class="left-container">
+                    <ul>
+                        <li><a href="/hotels">Home</a></li>
+                        {{#if isAuthenticated}}
+                        <li><a href="/hotels/create">Add +</a></li>
+                        {{else}}
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/auth/register">Register</a></li>
+                        {{/if}}
+                    </ul>
+                </div>
+                {{#if isAuthenticated}}
+                <div class="right-container">
+                    <a href="/auth/profile" class="log-out">{{user.username}}</a>
+                    <a href="/auth/logout" class="log-out">Logout</a>
+                </div>
+                {{/if}}
+            </nav>
             {{{body}}}
+            <footer>@SoftUni - JS Back-end - BookingUni 2020</footer>
         </div>
-        <footer>@Cubicle: Exercise for Express.js and Handlebars</footer>
     </body>
 </html>

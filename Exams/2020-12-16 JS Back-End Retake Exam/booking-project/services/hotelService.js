@@ -1,23 +1,23 @@
 import Accessory from '../models/Accessory.js';
-import Cube from '../models/Cube.js';
+import Hotel from '../models/Hotel.js';
 
 async function getAll(query) {
-    const result = Cube.find().setOptions({ lean: true })
+    const result = Hotel.find().setOptions({ lean: true })
         .where({ name: { $regex: query.search || '', $options: 'i' } })
-        .where({ difficultyLevel: { $gte: query.from || 1, $lte: query.to || 6 } });
+        .sort('freeRooms');
     return result;
 };
 
 function getOne(id) {
-    return Cube.findById(id).lean();
+    return Hotel.findById(id).lean();
 }
 
 function getOneWithAccessories(id) {
-    return Cube.findById(id).populate('accessories').lean();
+    return Hotel.findById(id).populate('accessories').lean();
 }
 
-function createOne(userId, data) {
-    const cube = new Cube({ creator: userId, ...data });
+function createOne(data) {
+    const cube = new Hotel({ ...data });
     return new Promise((resolve, reject) => {
         cube.save()
             .then(x => resolve(x))
@@ -35,15 +35,15 @@ function createOne(userId, data) {
 }
 
 function updateOne(cubeId,cubeData) {
-    return Cube.findByIdAndUpdate({ _id: cubeId }, cubeData, { useFindAndModify: false });
+    return Hotel.findByIdAndUpdate({ _id: cubeId }, cubeData, { useFindAndModify: false });
 }
 
 function deleteOne(cubeId) {
-    return Cube.findByIdAndDelete(cubeId);
+    return Hotel.findByIdAndDelete(cubeId);
 }
 
 async function attachAccessory(cubeId, accessoryId) {
-    const cube = await Cube.findById(cubeId);
+    const cube = await Hotel.findById(cubeId);
     const accessory = await Accessory.findById(accessoryId);
 
     cube.accessories.push(accessory);

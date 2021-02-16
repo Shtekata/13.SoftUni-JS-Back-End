@@ -22,7 +22,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    roles: [{ type: String }]
+    roles: [{ type: String }],
+    bookedHotels: [{
+        type: mongoose.Types.ObjectId, ref: 'Hotel'
+    }],
+    offeredHotels: [{
+        type: mongoose.Types.ObjectId, ref: 'Hotel'
+    }]
 });
 
 export default mongoose.model('User', userSchema);
