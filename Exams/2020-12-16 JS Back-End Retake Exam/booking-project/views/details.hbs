@@ -9,12 +9,16 @@
                 <h3>{{x.name}}</h3>
             </div>
             <div>{{x.city}}</div>
+            {{#if isNotOwner}}
             <p><span>Free rooms: {{x.freeRooms}}</span> </p>
-            <p><span class="green">You already have booked a room</span> </p>
-            <a href="" class="book">Book</a>
-            {{#if isOwner}}
-            <a href="" class="edit">Edit</a>
-            <a href="" class="remove">Delete</a>
+            {{#if userBookedRoom}}
+            <p><span class="green">You already have booked a room</span></p>
+            {{else}}
+            <a href="/entities/book/{{x._id}}" class="book">Book</a>
+            {{/if}}
+            {{else}}
+            <a href="/entities/edit/{{x._id}}" class="edit">Edit</a>
+            <a href="/entities/delete/{{x._id}}" class="remove">Delete</a>
             {{/if}}
         </div>
     </div>

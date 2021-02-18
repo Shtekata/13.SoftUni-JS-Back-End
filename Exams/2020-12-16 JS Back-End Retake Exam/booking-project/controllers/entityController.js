@@ -1,6 +1,6 @@
 import Router from 'express';
-import hotelService from '../services/hotelService.js';
-import accessoryService from '../services/accessoryService.js';
+import entityService from '../services/entityService.js';
+import accessoryService from '../services/entityService.js';
 import isAuth from '../middlewares/isAuth.js';
 import { body, validationResult } from 'express-validator';
 import { ENGLISH_ALPHANUMERIC_PATTERN } from '../config/constants.js';
@@ -8,22 +8,25 @@ import { ENGLISH_ALPHANUMERIC_PATTERN } from '../config/constants.js';
 const router = Router();
 
 router.get('/', (req, res, next) => {
-    hotelService.getAll(req.query)
+    entityService.getAll(req.query)
         .then(x => { res.render('home', { title: 'BookingUni', hotels: x, infoMsg: 'Welcome!', isAuth: res.locals.isAuth }) })
         .catch(next);
 });
 
-router.get('/details/:hotelId', (req, res, next) => {
-    hotelService.getOneWithAccessories(req.params.hotelId)
+router.get('/details/:id', (req, res, next) => {
+    entityService.getOne(req.params.id)
         .then(x => {
-            let isOwner = false;
-            if (x.owner == req.user?._id) isOwner = true;
-            res.render('details', { title: 'Hotel Details', x, isOwner })
+            const userId = res.locals.user._id;
+            let isNotOwner = true;
+            let userBookedRoom = false;
+            if (x.owner == userId) isNotOwner = false;
+            if (x.usersBookedRoom.toString().includes(userId)) userBookedRoom = true;
+            res.render('details', { title: 'Hotel Details', x, isNotOwner, userBookedRoom })
         })
         .catch(next)
 });
 
-router.get('/create', isAuth, (req, res) => res.render('create', { title: 'Create Hotel' }));
+router.get('/create', isAuth, (req, res) => res.render('create', { title: 'Create ' }));
 router.post('/create',
     isAuth,
     body('hotel').trim()
@@ -40,22 +43,22 @@ router.post('/create',
             let err = {};
             const errors = validationResult(req).array();
             errors.forEach(x => err.message = err.message ? `${err.message}\n${x.msg}` : x.msg);
-            return res.render('create', { title: 'Create Hotel', err });
+            return res.render('create', { title: 'Create Hotel', err, x: req.body });
         };
 
-        hotelService.createOne({
-            owner: req.user._id,
+        entityService.createOne({
+            owner: res.locals.user._id,
             name: req.body.hotel,
             city:req.body.city,
             imageUrl: req.body.imgUrl,
             freeRooms: req.body['free-rooms']
         })
-            .then(x => res.redirect('/hotels'))
+            .then(x => res.redirect('/entities'))
             .catch(next);
     });
 
-router.get('/:cubeId/edit', isAuth, (req, res, next) => {
-    hotelService.getOne(req.params.cubeId)
+router.get('/edit/:id', isAuth, (req, res, next) => {
+    entityService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator == req.user._id) res.render('editCube', { title: 'Edit Cube Page', x });
             else res.redirect('/cubes');
@@ -63,9 +66,9 @@ router.get('/:cubeId/edit', isAuth, (req, res, next) => {
         .catch(next);
 })
 router.post('/:cubeId/edit', isAuth, (req, res, next) => {
-    hotelService.getOne(req.params.cubeId)
+    entityService.getOne(req.params.cubeId)
         .then(x => {
-            if (x.creator == req.user._id) return hotelService.updateOne(req.params.cubeId, req.body);
+            if (x.creator == req.user._id) return entityService.updateOne(req.params.cubeId, req.body);
             return;
         })
         .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
@@ -73,7 +76,7 @@ router.post('/:cubeId/edit', isAuth, (req, res, next) => {
 })
 
 router.get('/:cubeId/delete', isAuth, (req, res, next) => {
-    hotelService.getOne(req.params.cubeId)
+    entityService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator != req.user._id) res.redirect('/cubes'); 
             res.render('deleteCube', { title: 'Delete Cube Page', x });
@@ -81,26 +84,21 @@ router.get('/:cubeId/delete', isAuth, (req, res, next) => {
         .catch(next);
 })
 router.post('/:cubeId/delete', isAuth, (req, res, next) => {
-    hotelService.getOne(req.params.cubeId)
+    entityService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator != req.user._id) return;
-            return hotelService.deleteOne(req.params.cubeId)
+            return entityService.deleteOne(req.params.cubeId)
         })
         .then(x => res.redirect('/cubes'))
         .catch(next);
 })
 
-router.get('/:cubeId/attach', isAuth, async (req, res, next) => {
-    const cube = await hotelService.getOne(req.params.cubeId);
-    const accessories = accessoryService.getAllUnattached(cube.accessories);
-    Promise.all([cube, accessories])
-        .then(x => res.render('attachAccessory', { title: 'Attach Accessory', cube: x[0], accessories: x[1] }))
+router.get('/book/:id', isAuth, async (req, res, next) => {
+    const id = req.params.id;
+    const userId = res.locals.user._id;
+    entityService.book(id, userId)
+        .then(x => res.redirect(`/entities/details/${id}`))
         .catch(next);
 });
-router.post('/:cubeId/attach', isAuth, (req, res, next) => {
-    hotelService.attachAccessory(req.params.cubeId, req.body.accessory)
-        .then(x => res.redirect(`/cubes/details/${req.params.cubeId}`))
-        .catch(next);
-})
 
 export default router;
