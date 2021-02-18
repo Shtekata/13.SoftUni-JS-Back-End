@@ -1,0 +1,12 @@
+export const MONGO_USER = 'appuser';
+export const MONGO_PASS = '7u8';
+export const SALT_ROUNDS_DEV = 9;
+export const SALT_ROUNDS_PROD = 10;
+export const SECRET_DEV = 'geshlandia';
+export const SECRET_PROD = 'geshlandiaMinlandia';
+export const COOKIE_NAME_DEV = 'USER_SESSION';
+export const COOKIE_NAME_PROD = 'USER_SESSION_MESHON';
+export const ENGLISH_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9 ]+$/;
+export const PASSWORD_MIN_LENGTH = 5;
+export const ENTITY_NAME_MIN_LENGTH = 4;
+export const ENTITY_PROPERTY_ONE_MIN_LENGTH = 3;
