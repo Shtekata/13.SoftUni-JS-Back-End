@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>{{title}}</title>
-        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css">
         <link rel='shortcut icon' type='image/x-icon'
-            href='/img/favicon.ico'/>
+            href='/static/img/favicon.ico'/>
     </head>
     <body>
         <div id="container">
@@ -17,7 +17,7 @@
                 {{/if}}
                 {{#if err}}
                 <div class="notification errorBox">
-                    <span>{{err.message}}</span>
+                    <span>{{err.msg}}</span>
                 </div>
                 {{/if}}
             </div>
@@ -35,7 +35,7 @@
                 </div>
                 {{#if isAuth}}
                 <div class="right-container">
-                    <a href="/auth/profile" class="log-out">{{user.username}}</a>
+                    <a href="/auth/profile/{{user._id}}" class="log-out">{{user.username}}</a>
                     <a href="/auth/logout" class="log-out">Logout</a>
                 </div>
                 {{/if}}

@@ -21,31 +21,63 @@ function createOne(data) {
         cube.save()
             .then(x => resolve(x))
             .catch(x => {
-                let error = {};
-                if (!x.errors) error.message = x.message;
+                let err = {};
+                if (!x.errors) err.msg = x.message;
                 else {
                     Object.keys(x.errors).map(y =>
-                        error.message = error.message ? `${error.message}\n${x.errors[y].message}` : x.errors[y].message
+                        err.msg = err.msg ? `${err.msg}\n${x.errors[y].message}` : x.errors[y].message
                     );
                 }
-                reject(error);
+                reject(err);
             });
     });
 }
 
-function updateOne(entityId,entityData) {
-    return Entity.findByIdAndUpdate({ _id: entityId }, entityData, { useFindAndModify: false });
+function updateOne(entityId, entityData) {
+    const data = {
+        name: entityData.hotel,
+        city: entityData.city,
+        imageUrl: entityData.imgUrl,
+        freeRooms: entityData['free-rooms']
+    };
+    return new Promise((resolve, reject) => {
+        Entity.findByIdAndUpdate({ _id: entityId }, data, { useFindAndModify: false })
+            .then(x => resolve(x))
+            .catch(x => {
+                let err = {};
+                if (!x.errors) err.msg = x.message;
+                else {
+                    Object.keys(x.errors).map(y =>
+                        err.msg = err.msg ? `${err.msg}\n${x.errors[y].message}` : x.errors[y].message
+                    );
+                }
+                reject(err);
+            });
+    });
 }
 
-function deleteOne(cubeId) {
-    return Entity.findByIdAndDelete(cubeId);
+function deleteOne(id) {
+    return new Promise((resolve, reject) => {
+        Entity.findByIdAndDelete(id)
+            .then(x => resolve(x))
+            .catch(x => {
+                let err = {};
+                if (!x.errors) err.msg = x.message;
+                else {
+                    Object.keys(x.errors).map(y =>
+                        err.msg = err.msg ? `${err.msg}\n${x.errors[y].message}` : x.errors[y].message
+                    );
+                }
+                reject(err);
+            });
+    });
 }
 
 async function book(id, userId) {
     const user = await User.findById(userId);
     const entity = await Entity.findById(id);
 
-    if (entity.freeRooms === 0) throw { msg: 'Not enough free rooms!' };
+    if (entity.freeRooms === 1) throw { msg: 'Not enough free rooms!' };
     entity.freeRooms--;
 
     user.bookedHotels.push(entity);

@@ -41,7 +41,13 @@ const register = ({ username, password, email }) => {
         });
 };
 
+const getUser = (id) => User.findById(id);
+
+const getUserWithBookedHotels = (id) => User.findById(id).populate('bookedHotels');
+
 export default {
     login,
-    register
+    register,
+    getUser,
+    getUserWithBookedHotels
 }
