@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import Entity from '../models/Entity.js';
+import authService from './authService.js';
 
 function getAll(query) {
     return Entity.find().setOptions({ lean: true })
@@ -16,10 +17,14 @@ function getOneWithAccessories(id) {
 }
 
 function createOne(data) {
-    const cube = new Entity({ ...data });
+    const entity = new Entity({ ...data });
     return new Promise((resolve, reject) => {
-        cube.save()
-            .then(x => resolve(x))
+        entity.save()
+            .then(x => authService.getUser(data.owner).then(y => { return { x, y } }))
+            .then(x => {
+                x.y.offeredHotels.push(x.x)
+                resolve(x.y.save())
+            })
             .catch(x => {
                 let err = {};
                 if (!x.errors) err.msg = x.message;

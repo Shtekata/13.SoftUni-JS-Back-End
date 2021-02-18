@@ -58,9 +58,10 @@ router.get('/logout', isAuth, (req, res) => {
 });
 
 router.get('/profile/:id', (req, res, next) => {
-    const user = authService.getUserWithBookedHotels(req.params.id)
+    const user = authService.getUserWithBookedAndOwnHotels(req.params.id)
         .then(x => {
             x.userBookedHotels = x.bookedHotels.map(x => x.name);
+            x.userOfferedHotels = x.offeredHotels.map(x => x.name);
             res.render('auth/profile', x)
         })
         .catch(next);
