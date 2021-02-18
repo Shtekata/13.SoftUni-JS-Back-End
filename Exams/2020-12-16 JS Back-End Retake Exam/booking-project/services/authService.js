@@ -6,6 +6,16 @@ import jwt from 'jsonwebtoken';
 const SALT_ROUNDS = config.SALT_ROUNDS;
 const SECRET = config.SECRET;
 
+const login = ({ username, password }) => User.findOne({ username })
+    .then(async x => {
+        if (!x) throw { message: 'User with given username do not exists!' };
+        const y = await bcrypt.compare(password, x.password);
+        return { x, y };
+    }).then(z => {
+        if (!z.y) throw { message: 'Password does not match!' };
+        return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);
+    });
+
 const register = ({ username, password, email }) => {
     return User.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } })
         .then(x => {
@@ -31,18 +41,7 @@ const register = ({ username, password, email }) => {
         });
 };
 
-const login = ({ username, password }) => User.findOne({ username })
-    .then(async x => {
-        if (!x) throw { message: 'User with given username do not exists!' };
-        const y = await bcrypt.compare(password, x.password);
-        return { x, y };
-    }).then(z => {
-        if (!z.y) throw { message: 'Password does not match!' };
-        return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);
-    });
-
-
 export default {
-    register,
-    login
+    login,
+    register
 }

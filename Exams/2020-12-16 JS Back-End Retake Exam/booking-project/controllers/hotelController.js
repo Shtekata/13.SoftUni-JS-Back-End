@@ -1,5 +1,4 @@
 import Router from 'express';
-import { validateCubeFormInputs as validator } from '../middlewares/validatorCube.js';
 import hotelService from '../services/hotelService.js';
 import accessoryService from '../services/accessoryService.js';
 import isAuth from '../middlewares/isAuth.js';
@@ -10,21 +9,21 @@ const router = Router();
 
 router.get('/', (req, res, next) => {
     hotelService.getAll(req.query)
-        .then(x => { res.render('home', { title: 'BookingUni', hotels: x, infoMsg: 'Welcome!' }) })
+        .then(x => { res.render('home', { title: 'BookingUni', hotels: x, infoMsg: 'Welcome!', isAuth: res.locals.isAuth }) })
         .catch(next);
 });
 
-router.get('/details/:cubeId', (req, res, next) => {
-    hotelService.getOneWithAccessories(req.params.cubeId)
+router.get('/details/:hotelId', (req, res, next) => {
+    hotelService.getOneWithAccessories(req.params.hotelId)
         .then(x => {
             let isOwner = false;
-            if (x.creator == req.user?._id) isOwner = true;
-            res.render('details', { title: 'Cube Details', cube: x, isOwner })
+            if (x.owner == req.user?._id) isOwner = true;
+            res.render('details', { title: 'Hotel Details', x, isOwner })
         })
         .catch(next)
 });
 
-router.get('/create', isAuth, (req, res) => res.render('create', { title: 'Create Cube' }));
+router.get('/create', isAuth, (req, res) => res.render('create', { title: 'Create Hotel' }));
 router.post('/create',
     isAuth,
     body('hotel').trim()
@@ -38,10 +37,10 @@ router.post('/create',
     (req, res, next) => {
 
         if (!validationResult(req).isEmpty()) {
-            let error = {};
+            let err = {};
             const errors = validationResult(req).array();
-            errors.forEach(x => error.message = error.message ? `${error.message}\n${x.msg}` : x.msg);
-            return res.render('register', { title: 'Register Page', error });
+            errors.forEach(x => err.message = err.message ? `${err.message}\n${x.msg}` : x.msg);
+            return res.render('create', { title: 'Create Hotel', err });
         };
 
         hotelService.createOne({
@@ -63,7 +62,7 @@ router.get('/:cubeId/edit', isAuth, (req, res, next) => {
         })
         .catch(next);
 })
-router.post('/:cubeId/edit', isAuth, validator, (req, res, next) => {
+router.post('/:cubeId/edit', isAuth, (req, res, next) => {
     hotelService.getOne(req.params.cubeId)
         .then(x => {
             if (x.creator == req.user._id) return hotelService.updateOne(req.params.cubeId, req.body);

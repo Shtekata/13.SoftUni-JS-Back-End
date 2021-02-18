@@ -9,13 +9,10 @@ export default function () {
         const token = req.cookies[COOKIE_NAME];
         if (token) {
             jwt.verify(token, SECRET, (e, x) => {
-                if (e) res.clearCookie(COOKIE_NAME);
-                if (!x._id) return;
-                else {
-                    res.locals.user = x;
-                    res.locals.isAuthenticated = true;
-                }
-            })
+                if (e || !x._id) return res.clearCookie(COOKIE_NAME);
+                res.locals.user = x;
+                res.locals.isAuth = true;
+            });
         }
         next();
     }

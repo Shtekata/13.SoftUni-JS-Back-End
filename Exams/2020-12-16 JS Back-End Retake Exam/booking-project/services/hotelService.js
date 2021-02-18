@@ -4,7 +4,7 @@ import Hotel from '../models/Hotel.js';
 function getAll(query) {
     return Hotel.find().setOptions({ lean: true })
         .where({ name: { $regex: query.search || '', $options: 'i' } })
-        .sort('freeRooms');
+        .sort('-freeRooms');
 };
 
 function getOne(id) {

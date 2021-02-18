@@ -9,6 +9,6 @@ router.use('/', homeController);
 router.use('/auth', authController);
 router.use('/hotels', hotelController);
 router.get('/500', (req, res) => res.render('500', { title: 'Server Error', error: req.session.error }));
-router.get('*', (req, res) => res.render('404', { title: 'Page Not Found' }));
+router.get('*', (req, res) => res.status(404).render('404', { title: 'Page Not Found' }));
 
 export default router;

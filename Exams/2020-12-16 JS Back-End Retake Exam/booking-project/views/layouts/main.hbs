@@ -25,7 +25,7 @@
                 <div class="left-container">
                     <ul>
                         <li><a href="/hotels">Home</a></li>
-                        {{#if isAuthenticated}}
+                        {{#if isAuth}}
                         <li><a href="/hotels/create">Add +</a></li>
                         {{else}}
                         <li><a href="/auth/login">Login</a></li>
@@ -33,7 +33,7 @@
                         {{/if}}
                     </ul>
                 </div>
-                {{#if isAuthenticated}}
+                {{#if isAuth}}
                 <div class="right-container">
                     <a href="/auth/profile" class="log-out">{{user.username}}</a>
                     <a href="/auth/logout" class="log-out">Logout</a>
