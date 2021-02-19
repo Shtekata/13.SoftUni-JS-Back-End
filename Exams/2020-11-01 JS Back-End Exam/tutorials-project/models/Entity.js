@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const hotelScheme = new mongoose.Schema({
+const courseScheme = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -22,11 +22,19 @@ const hotelScheme = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        required: true
+    },
+    creator: {
+        type: mongoose.Types.ObjectId, required: true, ref: 'User'
     },
     usersEnrolled: [{
         type: mongoose.Types.ObjectId, ref: 'User'
     }]
 });
 
-export default mongoose.model('Course', hotelScheme);
+courseScheme.pre('save', function (next) {
+    const date = new Date();
+    this.createdAt = date;
+    next();
+});
+
+export default mongoose.model('Course', courseScheme);

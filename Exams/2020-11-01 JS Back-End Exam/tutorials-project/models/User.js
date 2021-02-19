@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true
     },
     roles: [{ type: String }],
     enrolledCourses: [{

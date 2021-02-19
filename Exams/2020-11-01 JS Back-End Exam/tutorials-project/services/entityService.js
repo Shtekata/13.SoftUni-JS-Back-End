@@ -2,10 +2,16 @@ import User from '../models/User.js';
 import Entity from '../models/Entity.js';
 import authService from './authService.js';
 
-function getAll(query) {
+function getAll(query, user) {
+    if (user) {
+        return Entity.find().setOptions({ lean: true })
+            .where({ title: { $regex: query || '', $options: 'i' } })
+            .sort('createdAt');
+    }
     return Entity.find().setOptions({ lean: true })
-        .where({ name: { $regex: query.search || '', $options: 'i' } })
-        .sort('-freeRooms');
+        .where({ title: { $regex: query || '', $options: 'i' } })
+        .sort('-usersEnrolled')
+        .limit(3);
 };
 
 function getOne(id) {
@@ -20,11 +26,7 @@ function createOne(data) {
     const entity = new Entity({ ...data });
     return new Promise((resolve, reject) => {
         entity.save()
-            .then(x => authService.getUser(data.owner).then(y => { return { x, y } }))
-            .then(x => {
-                x.y.offeredHotels.push(x.x)
-                resolve(x.y.save())
-            })
+            .then(x => resolve(x))
             .catch(x => {
                 let err = {};
                 if (!x.errors) err.msg = x.message;
@@ -33,18 +35,12 @@ function createOne(data) {
                         err.msg = err.msg ? `${err.msg}\n${x.errors[y].message}` : x.errors[y].message
                     );
                 }
-                reject(err);
+                reject(err)
             });
     });
 }
 
-function updateOne(entityId, entityData) {
-    const data = {
-        name: entityData.hotel,
-        city: entityData.city,
-        imageUrl: entityData.imgUrl,
-        freeRooms: entityData['free-rooms']
-    };
+function updateOne(entityId, data) {
     return new Promise((resolve, reject) => {
         Entity.findByIdAndUpdate({ _id: entityId }, data, { useFindAndModify: false })
             .then(x => resolve(x))
@@ -78,15 +74,12 @@ function deleteOne(id) {
     });
 }
 
-async function book(id, userId) {
+async function enroll(id, userId) {
     const user = await User.findById(userId);
     const entity = await Entity.findById(id);
 
-    if (entity.freeRooms === 1) throw { msg: 'Not enough free rooms!' };
-    entity.freeRooms--;
-
-    user.bookedHotels.push(entity);
-    entity.usersBookedRoom.push(user);
+    user.enrolledCourses.push(entity);
+    entity.usersEnrolled.push(user);
     const resultUser = user.save();
     const resultEntity = entity.save();
     
@@ -100,5 +93,5 @@ export default {
     createOne,
     updateOne,
     deleteOne,
-    book
+    enroll
 };
