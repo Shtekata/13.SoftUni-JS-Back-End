@@ -4,17 +4,14 @@ import isAuth from '../middlewares/isAuth.js';
 import { body, validationResult } from 'express-validator';
 import {
     ENGLISH_ALPHANUMERIC_PATTERN,
+    ENTITY_NAME,
     ENTITY_NAME_MIN_LENGTH,
-    ENTITY_PROPERTY_ONE_MIN_LENGTH
+    ENTITY_PROPERTY_ONE,
+    ENTITY_PROPERTY_ONE_MIN_LENGTH,
+    ENGLISH_ALPHANUMERIC_MESSAGE
 } from '../config/constants.js';
 
 const router = Router();
-
-router.get('/', (req, res, next) => {
-    entityService.getAll(req.query)
-        .then(x => { res.render('home', { title: 'BookingUni', hotels: x, infoMsg: 'Welcome!', isAuth: res.locals.isAuth }) })
-        .catch(next);
-});
 
 router.get('/details/:id', (req, res, next) => {
     entityService.getOne(req.params.id)
@@ -32,18 +29,18 @@ router.get('/details/:id', (req, res, next) => {
 router.get('/create', isAuth, (req, res) => res.render('create', { title: 'Create ' }));
 router.post('/create',
     isAuth,
-    body('hotel').trim()
-        .notEmpty().withMessage('Specify hotel!')
+    body('title').trim()
+        .notEmpty().withMessage(`Specify ${ENTITY_NAME}!`)
         .isLength({ min: ENTITY_NAME_MIN_LENGTH })
-        .withMessage(`Hotel name must be at least ${ENTITY_NAME_MIN_LENGTH} chars long`)
+        .withMessage(`${ENTITY_NAME} must be at least ${ENTITY_NAME_MIN_LENGTH} characters!`)
         .matches(ENGLISH_ALPHANUMERIC_PATTERN)
-        .withMessage('Hotel schould consist only english letters and digits!'),
-    body('city').trim()
-        .notEmpty().withMessage('Specify city!')
+        .withMessage(ENGLISH_ALPHANUMERIC_MESSAGE),
+    body('description').trim()
+        .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_ONE}!`)
         .isLength({ min: ENTITY_PROPERTY_ONE_MIN_LENGTH })
-        .withMessage(`Hotel name must be at least ${ENTITY_PROPERTY_ONE_MIN_LENGTH} chars long`)
+        .withMessage(`${ENTITY_PROPERTY_ONE} must be at least ${ENTITY_PROPERTY_ONE_MIN_LENGTH} characters!`)
         .matches(ENGLISH_ALPHANUMERIC_PATTERN)
-        .withMessage('City schould consist only english letters and digits!'),
+        .withMessage(ENGLISH_ALPHANUMERIC_MESSAGE),
     body('imgUrl', 'Not valid image URL').isURL(),
     body('free-rooms', 'Rooms have to be between 1 and 100!').isInt({ min: 1, max: 100 }),
     (req, res, next) => {

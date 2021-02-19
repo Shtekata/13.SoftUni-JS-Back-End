@@ -1,0 +1,35 @@
+ <main>
+    {{#unless user}}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Tutorials</h1>
+            <p class="lead">Start Self-Learning Today: Be the best Developer in
+                the company</p>
+        </div>
+    </div>
+    {{/unless}}
+    <div>
+        <h1 class="text-center">{{#if user}}Courses{{else}}Top Courses</h1>{{/if}}
+        {{#if user}}
+        <section>
+            <a href="/course/create" class="btn btn-warning">Create Course</a>
+            <form class="search float-right">
+                <label>Search: </label>
+                <input type="text">
+                <input type="submit" class="btn btn-primary" value="Search">
+            </form>
+        </section>
+        {{/if}}
+        <div class="container mt-3">
+            {{#if courses}}
+            <div class="row d-flex justify-content-center">
+                <div class="card-deck">
+                    {{>courses}}
+                </div>
+            </div>
+            {{else}}
+            <h4 class="text-center">No courses...</h4>
+            {{/if}}
+        </div>
+    </div>
+</main>

@@ -11,7 +11,6 @@ export default function () {
             jwt.verify(token, SECRET, (e, x) => {
                 if (e || !x._id) return res.clearCookie(COOKIE_NAME);
                 res.locals.user = x;
-                res.locals.isAuth = true;
             });
         }
         next();

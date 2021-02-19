@@ -7,19 +7,20 @@ import {
     SECRET_PROD,
     COOKIE_NAME_DEV,
     COOKIE_NAME_PROD,
+    PROJECT_NAME
 } from './constants.js';
 
 const config = {
     development: {
         PORT: process.env.PORT || 5000,
-        DB_CONNECTION: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@shtekatacluster.0dh5a.mongodb.net/booking?retryWrites=true&w=majority`,
+        DB_CONNECTION: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@shtekatacluster.0dh5a.mongodb.net/${PROJECT_NAME}?retryWrites=true&w=majority`,
         SALT_ROUNDS: SALT_ROUNDS_DEV,
         SECRET: SECRET_DEV,
         COOKIE_NAME: COOKIE_NAME_DEV,
     },
     production: {
         PORT: process.env.PORT || 80,
-        DB_CONNECTION: 'mongodb://localhost:27017/cubicle',
+        DB_CONNECTION: `mongodb://localhost:27017/${PROJECT_NAME}`,
         SALT_ROUNDS: SALT_ROUNDS_PROD,
         SECRET: SECRET_PROD,
         COOKIE_NAME: COOKIE_NAME_PROD,

@@ -8,11 +8,11 @@ const SECRET = config.SECRET;
 
 const login = ({ username, password }) => User.findOne({ username })
     .then(async x => {
-        if (!x) throw { message: 'User with given username do not exists!' };
+        if (!x) throw { msg: 'User with given username do not exists!' };
         const y = await bcrypt.compare(password, x.password);
         return { x, y };
     }).then(z => {
-        if (!z.y) throw { message: 'Password does not match!' };
+        if (!z.y) throw { msg: 'Password does not match!' };
         return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);
     });
 
@@ -28,16 +28,16 @@ const register = ({ username, password, email }) => {
             return user.save();
         })
         .catch(x => {
-            let error = {};
+            let err = {};
             if (!x.errors) {
-                error.message = x.message;
+                err.msg = x.message;
             } else {
                 const errors = Object.keys(x.errors).map(y => ({ 'err-msg': x.errors[y].message }));
                 Object.keys(x.errors).map(y =>
-                    error.message = error.message ? `${error.message}\n${x.errors[y].message}` : x.errors[y].message
+                    err.msg = err.msg ? `${err.msg}\n${x.errors[y].message}` : x.errors[y].message
                 );
             }
-            throw error;
+            throw err;
         });
 };
 

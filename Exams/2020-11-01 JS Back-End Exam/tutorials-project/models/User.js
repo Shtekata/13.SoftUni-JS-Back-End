@@ -15,20 +15,17 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        minlength: 5,
         required: [true, 'Password is required!'],
     },
     email: {
         type: String,
-        required: true,
         unique: true
     },
     roles: [{ type: String }],
-    bookedHotels: [{
-        type: mongoose.Types.ObjectId, ref: 'Hotel'
+    enrolledCourses: [{
+        type: mongoose.Types.ObjectId, ref: 'Course'
     }],
-    offeredHotels: [{
-        type: mongoose.Types.ObjectId, ref: 'Hotel'
-    }]
 });
 
 export default mongoose.model('User', userSchema);
