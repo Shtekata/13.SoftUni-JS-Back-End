@@ -1,0 +1,27 @@
+ <main>
+    <div class="container">
+        <h1 class="my-4">Title : {{x.title}}
+        </h1>
+        <div class="row">
+            <div class="col-md-8">
+                <img class="img-fluid" src="{{x.imageUrl}}" alt="JavaScript" />
+            </div>
+            <div class="col-md-4 text-center">
+                <h4 class="my-3">Duration</h4>
+                <p>{{x.duration}}</p>
+                <h3 class="my-3">Description</h3>
+                <p>{{x.description}}</p>
+                {{#if isNotOwner}}
+                {{#if userEnrolledCourse}}
+                <span class="enrolled-span">You are already enrolled</span>
+                {{else}}
+                <a class="btn btn-primary" href="/courses/enroll/{{x._id}}">Enroll</a>
+                {{/if}}
+                {{else}}
+                <a class="btn btn-danger" href="/courses/delete/{{x._id}}">Delete</a>
+                <a class="btn btn-warning" href="/courses/edit/{{x._id}}">Edit</a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</main>
