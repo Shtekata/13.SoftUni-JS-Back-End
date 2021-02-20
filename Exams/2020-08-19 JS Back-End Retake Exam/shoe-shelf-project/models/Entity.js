@@ -38,7 +38,7 @@ const shoesScheme = new mongoose.Schema({
     }]
 });
 
-shoesScheme.pre('validation', function (next) {
+shoesScheme.pre('validate', function (next) {
     const date = new Date();
     this.createdAt = date;
     next();

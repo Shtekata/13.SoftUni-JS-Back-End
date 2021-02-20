@@ -17,12 +17,14 @@
                     <li class="site-logo">Shoe</li>
                     {{/if}}
                     <li>
-                        <a href="">
+                        <a href="/">
                             <img src="/static/img/sneakers.png" alt="">
                         </a>
                     </li>
                     {{#if user}}
-                    <li>Welcome, {{user.email}} | <a href="auth/logout">Logout</a></li>
+                    <li>Welcome, <a href="/auth/profile/{{user._id}}">{{user.email}}</a>
+                        | <a
+                            href="/auth/logout">Logout</a></li>
                     {{else}}
                     <li class="site-logo">Shelf</li>
                     {{/if}}

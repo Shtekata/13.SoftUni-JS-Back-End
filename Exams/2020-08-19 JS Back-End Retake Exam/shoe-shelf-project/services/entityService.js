@@ -5,12 +5,12 @@ import authService from './authService.js';
 function getAll(query, user) {
     if (user) {
         return Entity.find().setOptions({ lean: true })
-            .where({ title: { $regex: query || '', $options: 'i' } })
-            .sort('createdAt');
+            .where({ name: { $regex: query || '', $options: 'i' } })
+            .sort('buyers');
     }
     return Entity.find().setOptions({ lean: true })
-        .where({ title: { $regex: query || '', $options: 'i' } })
-        .sort('-usersEnrolled')
+        .where({ name: { $regex: query || '', $options: 'i' } })
+        .sort('-buyers')
         .limit(3);
 };
 
@@ -74,16 +74,20 @@ function deleteOne(id) {
     });
 }
 
-async function enroll(id, userId) {
+async function buy(id, userId) {
     const user = await User.findById(userId);
     const entity = await Entity.findById(id);
 
-    user.enrolledCourses.push(entity);
-    entity.usersEnrolled.push(user);
+    user.offersBought.push(entity);
+    entity.buyers.push(user);
     const resultUser = user.save();
     const resultEntity = entity.save();
     
     return Promise.all([resultUser, resultEntity]);
+}
+
+function getUserEntities(id) {
+    return Entity.find({ creator: id }).lean();
 }
 
 export default {
@@ -93,5 +97,6 @@ export default {
     createOne,
     updateOne,
     deleteOne,
-    enroll
+    buy,
+    getUserEntities
 };

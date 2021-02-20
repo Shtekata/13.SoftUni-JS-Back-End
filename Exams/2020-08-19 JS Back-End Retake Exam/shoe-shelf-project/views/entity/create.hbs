@@ -3,21 +3,25 @@
     <p class="message">{{err.msg}}</p>
     <form method="post">
         <div>
-            <input type="text" name="name" placeholder="Name...">
+            <input type="text" name="name" placeholder="Name..."
+                value="{{x.name}}">
         </div>
         <div>
-            <input type="text" name="price" placeholder="Price...">
+            <input type="text" name="price" placeholder="Price..."
+                value="{{x.price}}">
         </div>
         <div>
-            <input type="text" name="imageUrl" placeholder="Image url...">
+            <input type="text" name="imageUrl" placeholder="Image url..."
+                value="{{x.imageUrl}}">
         </div>
         <div>
             <textarea name="description" placeholder="Give us some description
                 about this
-                offer..."></textarea>
+                offer...">{{x.description}}</textarea>
         </div>
         <div>
-            <input type="text" name="brand" placeholder="Brand...">
+            <input type="text" name="brand" placeholder="Brand..."
+                value="{{x.brand}}">
         </div>
         <div>
             <button type="submit">Create</button>

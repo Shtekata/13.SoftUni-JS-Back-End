@@ -6,14 +6,14 @@
             <div class="description">{{x.description}}
                 <br>
                 <br>
-                <p> <strong>Buyers:</strong> {{x.buyers}}</p>
+                <p> <strong>Buyers:</strong> {{x.buyersCount}}</p>
                 <br>
                 <p class="price">${{x.price}}</p>
             </div>
         </div>
         <div class="actions">
-            {{#unless x.creator}}
-            {{#if x.bought}}
+            {{#unless x.isCreator}}
+            {{#if x.isBoughtProduct}}
             <span>You bought it</span>
             {{else}}
             <a href="/shoes/buy/{{x._id}}">Buy</a>

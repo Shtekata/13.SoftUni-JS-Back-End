@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import authService from '../services/authService.js';
+import entityService from '../services/entityService.js';
 import config from '../config/config.js';
 import isGuest from '../middlewares/isGuest.js';
 import isAuth from '../middlewares/isAuth.js';
@@ -62,7 +63,7 @@ router.post('/register',
             let err = {};
             const errors = validationResult(req).array();
             errors.forEach(x => err.msg = err.msg ? `${err.msg}\n${x.msg}` : x.msg);
-            return res.render('auth/register', { title: 'Register Page', err, username, fullName, email })
+            return res.render('auth/register', { title: 'Register Page', err, x: req.body })
         };
         
         authService.register({ username, fullName, email, password  })
@@ -77,12 +78,29 @@ router.get('/logout', isAuth, (req, res) => {
 });
 
 router.get('/profile/:id', (req, res, next) => {
-    const user = authService.getUserWithBookedAndOwnHotels(req.params.id)
+    authService.getUserWithOffersBought(req.params.id)
         .then(x => {
-            x.userBookedHotels = x.bookedHotels.map(x => x.name);
-            x.userOfferedHotels = x.offeredHotels.map(x => x.name);
-            res.render('auth/profile', x)
+            x.totalCost = 0;
+            x.offersBought.map(y => x.totalCost += y.price);
+            x.offersBoughtCount = x.offersBought.length;
+            return x;
         })
+        .then(x => {
+            return entityService.getUserEntities(req.params.id)
+                .then(y => {
+                    x.totalProfit = 0;
+                    x.mySalesCount = 0;
+                    x.offersSaled = y;
+                    y.map(z => {
+                        x.totalProfit += z.buyers.length * z.price;
+                        x.mySalesCount += z.buyers.length;
+                    });
+                    x.myOffersCount = y.length;
+                    x.totalProfit = x.totalProfit.toFixed(2);
+                    return x;
+                });
+        })
+        .then(x => res.render('auth/profile', x))
         .catch(next);
 });
 

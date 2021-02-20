@@ -43,11 +43,11 @@ const register = ({ username, fullName, password, email }) => {
 
 const getUser = (id) => User.findById(id);
 
-const getUserWithBookedAndOwnHotels = (id) => User.findById(id).populate('bookedHotels').populate('offeredHotels');
+const getUserWithOffersBought = (id) => User.findById(id).populate('offersBought').lean();
 
 export default {
     login,
     register,
     getUser,
-    getUserWithBookedAndOwnHotels
+    getUserWithOffersBought
 }
