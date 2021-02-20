@@ -1,7 +1,6 @@
 {
   "name": "cubic-project",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "SET NODE_ENV=development && SET PORT=5000 && nodemon",
@@ -23,5 +22,6 @@
   "devDependencies": {
     "nodemon": "^2.0.7"
   },
-  "type": "module"
+  "type": "module",
+  "description": ""
 }

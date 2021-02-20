@@ -6,25 +6,25 @@ import jwt from 'jsonwebtoken';
 const SALT_ROUNDS = config.SALT_ROUNDS;
 const SECRET = config.SECRET;
 
-const login = ({ username, password }) => User.findOne({ username })
+const login = ({ email, password }) => User.findOne({ email })
     .then(async x => {
-        if (!x) throw { msg: 'User with given username do not exists!' };
+        if (!x) throw { msg: 'User with given email do not exists!' };
         const y = await bcrypt.compare(password, x.password);
         return { x, y };
     }).then(z => {
         if (!z.y) throw { msg: 'Password does not match!' };
-        return jwt.sign({ _id: z.x._id, username: z.x.username, roles: z.x.roles }, SECRET);
+        return jwt.sign({ _id: z.x._id, email: z.x.email, roles: z.x.roles }, SECRET);
     });
 
-const register = ({ username, password, email }) => {
-    return User.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } })
+const register = ({ username, fullName, password, email }) => {
+    return User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } })
         .then(x => {
-            if (x && username) throw { message: 'User with given username already exists!' };
+            if (x && email) throw { message: 'User with given email already exists!' };
             return bcrypt.genSalt(SALT_ROUNDS);
         })
         .then(x => { return bcrypt.hash(password, x) })
         .then(x => {
-            const user = new User({ username, password: x, email, roles: ['user'] });
+            const user = new User({ username, fullName, password: x, email, roles: ['user'] });
             return user.save();
         })
         .catch(x => {

@@ -6,23 +6,27 @@ import isAuth from '../middlewares/isAuth.js';
 import { body, validationResult } from 'express-validator';
 import {
     ENGLISH_ALPHANUMERIC_PATTERN,
+    ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE,
+    ENGLISH_ALPHANUMERIC_PATTERN_FOR_EMAIL,
     ENGLISH_ALPHANUMERIC_MESSAGE,
     USERNAME_MIN_LENGTH,
     PASSWORD_MIN_LENGTH,
-    PASSWORD_CONFIRMATION_ERR
+    PASSWORD_CONFIRMATION_ERR,
+    FULLNAME_MIN_LENGTH,
+    EMAIL_MIN_LENGTH
 } from '../config/constants.js';
 
 const router = Router();
 const COOKIE_NAME = config.COOKIE_NAME;
 
 router.get('/login', isGuest, (req, res) => {
-    res.render('auth/login', { title: 'Login Page', isLoading: false });
+    res.render('auth/login', { title: 'Login Page' });
 });
 router.post('/login', isGuest, (req, res) => {
-    const { username, password } = req.body;
-    authService.login({ username, password })
+    const { username, fullName, email, password } = req.body;
+    authService.login({ email, password })
         .then(x => { res.cookie(COOKIE_NAME, x, { httpOnly: true }); res.redirect('/') })
-        .catch(x => res.render('auth/login', { title: 'Login Page', err: x, username }));
+        .catch(x => res.render('auth/login', { title: 'Login Page', err: x, email }));
 });
 
 router.get('/register', isGuest, (req, res) => {
@@ -30,34 +34,39 @@ router.get('/register', isGuest, (req, res) => {
 });
 router.post('/register',
     isGuest,
-    body('username').trim()
-        .notEmpty().withMessage('Specify username!')
-        .isLength({ min: USERNAME_MIN_LENGTH }).withMessage(`Username must be at least ${USERNAME_MIN_LENGTH} characters!`)
-        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE),
+    // body('username').trim()
+    //     .notEmpty().withMessage('Specify username!')
+    //     .isLength({ min: USERNAME_MIN_LENGTH }).withMessage(`Username must be at least ${USERNAME_MIN_LENGTH} characters!`)
+    //     .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'username!'),
+    body('fullName').trim()
+        .notEmpty().withMessage('Specify full name!')
+        .isLength({ min: FULLNAME_MIN_LENGTH }).withMessage(`Full name must be at least ${FULLNAME_MIN_LENGTH} characters!`)
+        .matches(ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'full name!'),
     body('password').trim()
         .notEmpty().withMessage('Specify password!')
         .isLength({ min: PASSWORD_MIN_LENGTH }).withMessage(`Password must be at least ${PASSWORD_MIN_LENGTH} characters!`)
-        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE),
+        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'password!'),
     body('rePassword').custom((value, { req }) => {
         if (value === req.body.password) return true;
-        throw PASSWORD_CONFIRMATION_ERR;
-    }),
-    body('email', 'Your email is not valid')
-        .optional({ checkFalsy: true })
-        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage('Password schould consist only english letters and digits!')
-        .isEmail(),
+        throw PASSWORD_CONFIRMATION_ERR; }),
+    body('email').trim()
+        // .optional({ checkFalsy: true })
+        .notEmpty().withMessage('Specify email!')
+        .isEmail().withMessage('Not valid email!')
+        .isLength({ min: EMAIL_MIN_LENGTH }).withMessage(`Email must be at least ${EMAIL_MIN_LENGTH} characters!`)
+        .matches(ENGLISH_ALPHANUMERIC_PATTERN_FOR_EMAIL).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'email!'),
     (req, res, next) => {
-        const { username, password, email } = req.body;
+        const { username, fullName, password, email } = req.body;
 
         if (!validationResult(req).isEmpty()) {
             let err = {};
             const errors = validationResult(req).array();
             errors.forEach(x => err.msg = err.msg ? `${err.msg}\n${x.msg}` : x.msg);
-            return res.render('auth/register', { title: 'Register Page', err, username })
+            return res.render('auth/register', { title: 'Register Page', err, username, fullName, email })
         };
         
-        authService.register({ username, password, email })
-            .then(x => authService.login({ username: x.username, password }))
+        authService.register({ username, fullName, email, password  })
+            .then(x => authService.login({ email: x.email, password }))
             .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/') })
             .catch(x => res.render('auth/register', { title: 'Register Page', err: x }))
     });

@@ -1,15 +1,19 @@
- <main>
-    <form class="text-center border border-light p-5" method="POST">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" placeholder="Username"
-                name="username" value="{{username}}">
+<main>
+    <h1>Login</h1>
+    <p class="form-info">Don't have account?
+        <a href="/auth/register">Register now</a> and fix that!
+    </p>
+    <form method="post">
+        <div>
+            <input type="email" name="email" placeholder="Email..."
+                value="{{email}}">
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" placeholder="Password"
-                name="password" value="">
+        <div>
+            <input type="password" name="password" placeholder="Password...">
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <div>
+            <p class="message">{{err.msg}}</p>
+            <button type="submit">Login</button>
+        </div>
     </form>
 </main>
