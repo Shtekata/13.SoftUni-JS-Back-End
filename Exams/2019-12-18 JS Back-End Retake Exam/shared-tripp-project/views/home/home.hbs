@@ -1,45 +1,18 @@
-<main>
-    <section class="container">
-        <h1>My Theater Info</h1>
-        <p>Lorem reprehenderit nostrud do do ut ad irure aliquip anim
-            adipisicing nulla ullamco. Non mollit
-            Lorem sunt proident nostrud dolore est minim reprehenderit
-            adipisicing consectetur dolore.
-            Nostrud id amet ad irure irure aute ad veniam deserunt mollit sint
-            pariatur. Velit quis amet
-            aliquip tempor. Dolore culpa deserunt proident nostrud amet
-            consectetur.
-            Exercitation exercitation pariatur deserunt duis. Elit duis aute do
-            ullamco fugiat magna officia
-            ad. Pariatur nulla ut pariatur Lorem pariatur incididunt eu
-            excepteur sint qui. Amet esse et
-            eiusmod officia fugiat aliquip ullamco laboris sint cillum cillum.
-            Elit proident mollit officia
-            tempor aliquip non ea occaecat sunt eiusmod enim nulla anim.
-            Voluptate laborum consequat elit
-            quis cupidatat tempor ad laboris duis non eiusmod.</p>
-    </section>
-    <section>
-        {{#if user}}
-        <div class="aux">
-            <h1>Available Plays</h1>
-            <div class="home-buttons">
-                <a class="btn create-play" href="/plays/create">Create Theater</a>
-                <a class="btn create-play" href="/plays/sortByDate">Sort by
-                    Date</a>
-                <a class="btn create-play" href="/plays/sortByLikes">Sort by
-                    Likes</a>
-            </div>
+<section class="py-5 bg-image-full"
+    style="background-image:
+    url('https://web-assets.cdn.dealersolutions.com.au/modular.multisite.dealer.solutions/wp-content/uploads/2018/03/17144131/Ford_Ranger_2-1900x1080.jpg');
+    background-repeat: no-repeat;">
+    <div style="height: 70vh;"></div>
+</section>
+<section class="py-5">
+    <div class="container">
+        <h1>SharedTripp</h1>
+        <div>
+            <p class="lead" style="font-size: 24px; font-style: italic;">"Because
+                the greatest part of a road trip
+                isn't arriving at your destination. It's all the wild stuff that
+                happens along the way..."
+            </p>
         </div>
-        {{else}}
-        <h1>Best Rated Plays</h1>
-        {{/if}}
-        {{#if plays}}
-        <div class="theaters-container">
-            {{>plays}}
-            {{else}}
-            <h4>No plays yet...</h4>
-            {{/if}}
-        </div>
-    </section>
-</main>
+    </div>
+</section>

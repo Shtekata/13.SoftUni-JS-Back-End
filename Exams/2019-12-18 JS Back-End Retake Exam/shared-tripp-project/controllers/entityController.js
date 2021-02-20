@@ -10,13 +10,17 @@ import {
     ENTITY_PROPERTY_ONE_MIN_LENGTH,
     ENTITY_PROPERTY_TWO,
     ENTITY_PROPERTY_TWO_MIN_LENGTH,
-    ENTITY_PROPERTY_TWO_MAX_LENGTH,
     ENTITY_PROPERTY_THREE,
     ENTITY_PROPERTY_THREE_MIN_LENGTH,
     ENTITY_PROPERTY_FOUR,
     ENTITY_PROPERTY_FOUR_DEFAULT,
     ENTITY_PROPERTY_FIVE,
     ENTITY_PROPERTY_FIVE_MIN_LENGTH,
+    ENTITY_PROPERTY_SIX,
+    ENTITY_PROPERTY_SIX_MIN_LENGTH,
+    ENTITY_PROPERTY_SEVEN,
+    ENTITY_PROPERTY_SEVEN_MIN_LENGTH,
+    ENTITY_PROPERTY_SIX_MAX_LENGTH,
     ENGLISH_ALPHANUMERIC_MESSAGE,
     ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE,
 } from '../config/constants.js';
@@ -45,8 +49,8 @@ router.post('/create',
     // .withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'title!'),
     body('description').trim()
         .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_TWO}!`)
-        .isLength({ min: ENTITY_PROPERTY_TWO_MIN_LENGTH, max: ENTITY_PROPERTY_TWO_MAX_LENGTH })
-        .withMessage(`${ENTITY_PROPERTY_TWO} must be between ${ENTITY_PROPERTY_TWO_MIN_LENGTH} and ${ENTITY_PROPERTY_TWO_MAX_LENGTH} characters!`),
+        .isLength({ min: ENTITY_PROPERTY_TWO_MIN_LENGTH, max: ENTITY_PROPERTY_SIX_MAX_LENGTH })
+        .withMessage(`${ENTITY_PROPERTY_TWO} must be between ${ENTITY_PROPERTY_TWO_MIN_LENGTH} and ${ENTITY_PROPERTY_SIX_MAX_LENGTH} characters!`),
     body('imageUrl', 'Not valid image URL').isURL({ protocols: ['http', 'https'] }),
     body('isPublic').custom((value, { req }) => {
         if (value === 'on' || value === undefined) return true;
