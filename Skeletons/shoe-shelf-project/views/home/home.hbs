@@ -1,0 +1,21 @@
+<main>
+    {{#if user}}
+    {{#if shoes}}
+    <div class="shoes">
+        {{>shoes}}
+    </div>
+    {{else}}
+    <h1>No shoes to display. Be the first to create a new offer...</h1>
+    {{/if}}
+    {{else}}
+    <div class="container">
+        <div class="about-us">
+            <div>
+                <img src="/static/img/shoes.jpg" alt="">
+                <img src="/static/img/shoes2.jpg" alt="">
+            </div>
+            <p><a href="/auth/register">Register Now</a> and Try it!</p>
+        </div>
+    </div>
+    {{/if}}
+</main>

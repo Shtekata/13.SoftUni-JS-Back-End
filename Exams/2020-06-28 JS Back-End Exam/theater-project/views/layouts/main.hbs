@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="icon" type="image/png" href="/static/favicon.ico">
+        <title>{{title}}</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    {{#if user}}
+                    <li><a href="/shoes/create">Create new offer</a></li>
+                    {{else}}
+                    <li class="site-logo">Shoe</li>
+                    {{/if}}
+                    <li>
+                        <a href="/">
+                            <img src="/static/img/sneakers.png" alt="">
+                        </a>
+                    </li>
+                    {{#if user}}
+                    <li>Welcome, <a href="/auth/profile/{{user._id}}">{{user.email}}</a>
+                        | <a
+                            href="/auth/logout">Logout</a></li>
+                    {{else}}
+                    <li class="site-logo">Shelf</li>
+                    {{/if}}
+                </ul>
+            </nav>
+        </header>
+        {{{body}}}
+        <footer>
+            <p><a href="https://softuni.bg">Software University</a> - JS Back
+                End @ 2020</p>
+        </footer>
+    </body>
+</html>
