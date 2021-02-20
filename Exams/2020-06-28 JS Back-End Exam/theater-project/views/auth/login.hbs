@@ -1,19 +1,16 @@
-<main>
-    <h1>Login</h1>
-    <p class="form-info">Don't have account?
-        <a href="/auth/register">Register now</a> and fix that!
-    </p>
+ <main>
     <form method="post">
+        <h2>Login</h2>
         <div>
-            <input type="email" name="email" placeholder="Email..."
-                value="{{email}}">
+            <label for="username">Username:</label>
+            <input type="text" name="username" placeholder="Username"
+                value="{{username}}">
         </div>
         <div>
-            <input type="password" name="password" placeholder="Password...">
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder="Password"
+                value="">
         </div>
-        <div>
-            <p class="message">{{err.msg}}</p>
-            <button type="submit">Login</button>
-        </div>
+        <button class="btn" type="submit">Login</button>
     </form>
 </main>

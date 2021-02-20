@@ -25,9 +25,9 @@ router.get('/login', isGuest, (req, res) => {
 });
 router.post('/login', isGuest, (req, res) => {
     const { username, fullName, email, password } = req.body;
-    authService.login({ email, password })
+    authService.login({ username, password })
         .then(x => { res.cookie(COOKIE_NAME, x, { httpOnly: true }); res.redirect('/') })
-        .catch(x => res.render('auth/login', { title: 'Login Page', err: x, email }));
+        .catch(x => res.render('auth/login', { title: 'Login Page', err: x, username }));
 });
 
 router.get('/register', isGuest, (req, res) => {
@@ -35,14 +35,14 @@ router.get('/register', isGuest, (req, res) => {
 });
 router.post('/register',
     isGuest,
-    // body('username').trim()
-    //     .notEmpty().withMessage('Specify username!')
-    //     .isLength({ min: USERNAME_MIN_LENGTH }).withMessage(`Username must be at least ${USERNAME_MIN_LENGTH} characters!`)
-    //     .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'username!'),
-    body('fullName').trim()
-        .notEmpty().withMessage('Specify full name!')
-        .isLength({ min: FULLNAME_MIN_LENGTH }).withMessage(`Full name must be at least ${FULLNAME_MIN_LENGTH} characters!`)
-        .matches(ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'full name!'),
+    body('username').trim()
+        .notEmpty().withMessage('Specify username!')
+        .isLength({ min: USERNAME_MIN_LENGTH }).withMessage(`Username must be at least ${USERNAME_MIN_LENGTH} characters!`)
+        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'username!'),
+    // body('fullName').trim()
+    //     .notEmpty().withMessage('Specify full name!')
+    //     .isLength({ min: FULLNAME_MIN_LENGTH }).withMessage(`Full name must be at least ${FULLNAME_MIN_LENGTH} characters!`)
+    //     .matches(ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'full name!'),
     body('password').trim()
         .notEmpty().withMessage('Specify password!')
         .isLength({ min: PASSWORD_MIN_LENGTH }).withMessage(`Password must be at least ${PASSWORD_MIN_LENGTH} characters!`)
@@ -51,7 +51,7 @@ router.post('/register',
         if (value === req.body.password) return true;
         throw PASSWORD_CONFIRMATION_ERR; }),
     body('email').trim()
-        // .optional({ checkFalsy: true })
+        .optional({ checkFalsy: true })
         .notEmpty().withMessage('Specify email!')
         .isEmail().withMessage('Not valid email!')
         .isLength({ min: EMAIL_MIN_LENGTH }).withMessage(`Email must be at least ${EMAIL_MIN_LENGTH} characters!`)
@@ -67,7 +67,7 @@ router.post('/register',
         };
         
         authService.register({ username, fullName, email, password  })
-            .then(x => authService.login({ email: x.email, password }))
+            .then(x => authService.login({ username, fullName, email, password }))
             .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/') })
             .catch(x => res.render('auth/register', { title: 'Register Page', err: x }))
     });

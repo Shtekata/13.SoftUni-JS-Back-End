@@ -1,30 +1,24 @@
  <main>
-    <h1>Edit Offer</h1>
-    <p class="message">{{err.msg}}</p>
-    <form method="post">
+    <form class="theater-form" method="post">
+        <h1>Edit Theater</h1>
         <div>
-            <input type="text" name="name" placeholder="Name..."
-                value="{{x.name}}">
+            <label for="title">Theater Title:</label>
+            <input type="text" name="title" placeholder="Theater name"
+                value="{{x.title}}">
         </div>
         <div>
-            <input type="text" name="" placeholder="Price..."
-                value="${{x.price}}">
+            <label for="description">Theater Description:</label>
+            <textarea name="description" placeholder="Description">{{x.description}}</textarea>
         </div>
         <div>
-            <input type="text" name="" placeholder="Image url..."
+            <label for="imageUrl">Image url:</label>
+            <input type="text" name="imageUrl" placeholder="Image Url"
                 value="{{x.imageUrl}}">
         </div>
-        <div>
-            <textarea name="description" placeholder="Give us some description
-                about this
-                offer...">{{x.description}}</textarea>
+        <div class="check">
+            <label for="check-box">Public</label>
+            <input type="checkbox" {{x.checked}} id="check-box">
         </div>
-        <div>
-            <input type="text" name="brand" placeholder="Brand..."
-                value="{{x.brand}}">
-        </div>
-        <div>
-            <button type="submit">Edit</button>
-        </div>
+        <button class="btn" type="submit">Submit</button>
     </form>
 </main>

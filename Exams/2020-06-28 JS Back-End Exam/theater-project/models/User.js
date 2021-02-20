@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
     username: {
         type: String,
-        // required: [true, 'Username is required!'],
-        // unique: true,
+        required: [true, 'Username is required!'],
+        unique: true,
         // minlength: 3,
         // validate: {
         //     validator: (x) => ENGLISH_ALPHANUMERIC_PATTERN.test(x),
@@ -29,13 +29,13 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: [true, 'Email is required!'],
-        unique: true,
-        minlength: 3,
-         validate: {
-            validator: (x) => ENGLISH_ALPHANUMERIC_PATTERN_FOR_EMAIL.test(x),
-            message: (x) => `${x.value} schould consist only english letters and digits!`
-        },
+        // required: [true, 'Email is required!'],
+        // unique: true,
+        // minlength: 3,
+        //  validate: {
+        //     validator: (x) => ENGLISH_ALPHANUMERIC_PATTERN_FOR_EMAIL.test(x),
+        //     message: (x) => `${x.value} schould consist only english letters and digits!`
+        // },
     },
     password: {
         type: String,
@@ -43,8 +43,8 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Password is required!'],
     },
     roles: [{ type: String }],
-    offersBought: [{
-        type: mongoose.Types.ObjectId, ref: 'Shoe'
+    likedPlays: [{
+        type: mongoose.Types.ObjectId, ref: 'Play'
     }],
 });
 

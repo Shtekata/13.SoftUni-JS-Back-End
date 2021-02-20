@@ -1,21 +1,43 @@
 <main>
-    {{#if user}}
-    {{#if shoes}}
-    <div class="shoes">
-        {{>shoes}}
-    </div>
-    {{else}}
-    <h1>No shoes to display. Be the first to create a new offer...</h1>
-    {{/if}}
-    {{else}}
-    <div class="container">
-        <div class="about-us">
-            <div>
-                <img src="/static/img/shoes.jpg" alt="">
-                <img src="/static/img/shoes2.jpg" alt="">
+    <section class="container">
+        <h1>My Theater Info</h1>
+        <p>Lorem reprehenderit nostrud do do ut ad irure aliquip anim
+            adipisicing nulla ullamco. Non mollit
+            Lorem sunt proident nostrud dolore est minim reprehenderit
+            adipisicing consectetur dolore.
+            Nostrud id amet ad irure irure aute ad veniam deserunt mollit sint
+            pariatur. Velit quis amet
+            aliquip tempor. Dolore culpa deserunt proident nostrud amet
+            consectetur.
+            Exercitation exercitation pariatur deserunt duis. Elit duis aute do
+            ullamco fugiat magna officia
+            ad. Pariatur nulla ut pariatur Lorem pariatur incididunt eu
+            excepteur sint qui. Amet esse et
+            eiusmod officia fugiat aliquip ullamco laboris sint cillum cillum.
+            Elit proident mollit officia
+            tempor aliquip non ea occaecat sunt eiusmod enim nulla anim.
+            Voluptate laborum consequat elit
+            quis cupidatat tempor ad laboris duis non eiusmod.</p>
+    </section>
+    <section>
+        {{#if user}}
+        <div class="aux">
+            <h1>Available Plays</h1>
+            <div class="home-buttons">
+                <a class="btn create-play" href="">Create Theater</a>
+                <a class="btn create-play" href="">Sort by Date</a>
+                <a class="btn create-play" href="">Sort by Likes</a>
             </div>
-            <p><a href="/auth/register">Register Now</a> and Try it!</p>
         </div>
-    </div>
-    {{/if}}
+        {{else}}
+        <h1>Best Rated Plays</h1>
+        {{/if}}
+        {{#if plays}}
+        <div class="theaters-container">
+            {{>plays}}
+            {{else}}
+            <h4>No plays yet...</h4>
+            {{/if}}
+        </div>
+    </section>
 </main>

@@ -10,9 +10,9 @@ import {
     ENTITY_PROPERTY_TWO,
     ENTITY_PROPERTY_TWO_MIN_LENGTH,
     ENTITY_PROPERTY_THREE,
-    ENTITY_PROPERTY_THREE_MIN,
+    ENTITY_PROPERTY_THREE_MIN_LENGTH,
     ENTITY_PROPERTY_FOUR,
-    ENTITY_PROPERTY_FOUR_MIN_LENGTH,
+    ENTITY_PROPERTY_FOUR_DEFAULT,
     ENTITY_PROPERTY_FIVE,
     ENTITY_PROPERTY_FIVE_MIN_LENGTH,
     ENGLISH_ALPHANUMERIC_MESSAGE,
@@ -48,8 +48,8 @@ router.post('/create',
         .withMessage(`${ENTITY_PROPERTY_TWO} must be at least ${ENTITY_PROPERTY_TWO_MIN_LENGTH} characters!`),
     body('price').trim()
         .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_THREE}!`)
-        .isFloat({ min: ENTITY_PROPERTY_THREE_MIN })
-        .withMessage(`${ENTITY_PROPERTY_THREE} must be at least ${ENTITY_PROPERTY_THREE_MIN} value!`),
+        .isFloat({ min: ENTITY_PROPERTY_THREE_MIN_LENGTH })
+        .withMessage(`${ENTITY_PROPERTY_THREE} must be at least ${ENTITY_PROPERTY_THREE_MIN_LENGTH} value!`),
     body('imageUrl', 'Not valid image URL').isURL({protocols: ['http','https']}),
     body('brand').notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_FIVE}`)
         .isLength({ min: ENTITY_PROPERTY_FIVE_MIN_LENGTH })
