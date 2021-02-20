@@ -1,45 +1,53 @@
 <main>
-    <section class="container">
-        <h1>My Theater Info</h1>
-        <p>Lorem reprehenderit nostrud do do ut ad irure aliquip anim
-            adipisicing nulla ullamco. Non mollit
-            Lorem sunt proident nostrud dolore est minim reprehenderit
-            adipisicing consectetur dolore.
-            Nostrud id amet ad irure irure aute ad veniam deserunt mollit sint
-            pariatur. Velit quis amet
-            aliquip tempor. Dolore culpa deserunt proident nostrud amet
-            consectetur.
-            Exercitation exercitation pariatur deserunt duis. Elit duis aute do
-            ullamco fugiat magna officia
-            ad. Pariatur nulla ut pariatur Lorem pariatur incididunt eu
-            excepteur sint qui. Amet esse et
-            eiusmod officia fugiat aliquip ullamco laboris sint cillum cillum.
-            Elit proident mollit officia
-            tempor aliquip non ea occaecat sunt eiusmod enim nulla anim.
-            Voluptate laborum consequat elit
-            quis cupidatat tempor ad laboris duis non eiusmod.</p>
-    </section>
-    <section>
-        {{#if user}}
-        <div class="aux">
-            <h1>Available Plays</h1>
-            <div class="home-buttons">
-                <a class="btn create-play" href="/plays/create">Create Theater</a>
-                <a class="btn create-play" href="/plays/sortByDate">Sort by
-                    Date</a>
-                <a class="btn create-play" href="/plays/sortByLikes">Sort by
-                    Likes</a>
+    <h1>Welcome to SoftUni Wiki!</h1>
+    <section id="featured">
+        <h2>Latests articles</h2>
+        <article>
+            <h3>Astronomy</h3>
+            <p>
+                Astronomy is a natural science that studies celestial objects
+                and phenomena. It applies
+                mathematics, physics, and chemistry,
+                in an effort to explain the origin of those objects and
+                phenomena and their evolution.
+                Objects
+                of interest include planets, moons, stars, galaxies, and comets;
+                the phenomena include
+                supernova
+                explosions, gamma ray bursts,&hellip;
+            </p>
+            <div class="controls">
+                <a href="article.html">Read more</a>
             </div>
-        </div>
-        {{else}}
-        <h1>Best Rated Plays</h1>
-        {{/if}}
-        {{#if plays}}
-        <div class="theaters-container">
-            {{>plays}}
-            {{else}}
-            <h4>No plays yet...</h4>
-            {{/if}}
-        </div>
+        </article>
+        <article>
+            <h3>Telescope</h3>
+            <p>
+                A telescope is an optical instrument that aids in the
+                observation of remote objects by
+                collecting electromagnetic radiation (such as visible light).
+                The first known practical
+                telescopes were invented in the Netherlands at the beginning of
+                the 17th century, by using
+                glass lenses. They found use in both terrestrial applications
+                and astronomy,&hellip;
+            </p>
+            <div class="controls">
+                <a href="article.html">Read more</a>
+            </div>
+        </article>
+        <article>
+            <h3>Planet</h3>
+            <p>
+                A planet is an astronomical body orbiting a star or stellar
+                remnant that is massive enough
+                to be rounded by its own gravity, is not massive enough to cause
+                thermonuclear fusion, and
+                has cleared its neighbouring region of planetesimals,&hellip;
+            </p>
+            <div class="controls">
+                <a href="article.html">Read more</a>
+            </div>
+        </article>
     </section>
 </main>

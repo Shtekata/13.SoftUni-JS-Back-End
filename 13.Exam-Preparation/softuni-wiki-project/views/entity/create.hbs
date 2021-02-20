@@ -1,25 +1,18 @@
  <main>
-    <form class="theater-form" method="post">
-        <h1>Create Theater</h1>
-        <div>
-            <label for="title">Theater Title:</label>
-            <input type="text" name="title" placeholder="Theater name"
-                value="{{x.title}}">
+    <h1>Welcome to SoftUni Wiki!</h1>
+    <section id="notifications">
+        <p>Article description should be at least 20 characters long...</p>
+    </section>
+    <section>
+        <h2>Create new article</h2>
+        <div class="spacer">
+            <form>
+                <label>Article title</label>
+                <input type="text" class="title">
+                <label>Content</label>
+                <textarea></textarea>
+                <input type="submit" value="Submit">
+            </form>
         </div>
-        <div>
-            <label for="description">Theater Description:</label>
-            <textarea name="description" placeholder="Description">{{x.description}}</textarea>
-        </div>
-        <div>
-            <label for="imageUrl">Image url:</label>
-            <input type="text" name="imageUrl" placeholder="Image Url"
-                value="{{x.imageUrl}}">
-        </div>
-        <div class="check">
-            <label for="check-box">Public</label>
-            <input type="checkbox" name="isPublic" {{x.isChecked}}
-                id="check-box">
-        </div>
-        <button class="btn" type="submit">Submit</button>
-    </form>
+    </section>
 </main>

@@ -1,0 +1,32 @@
+{{!-- {{#each plays}}
+{{>play user=../user}}
+{{/each}} --}}
+<main>
+    <h1>Welcome to SoftUni Wiki!</h1>
+    <section>
+        {{#unless x.inSearch}}
+        <h2>All articles</h2>
+        {{else}}
+        <h2>Search results for: "planet"</h2>
+        {{/unless}}
+        <div class="spacer">
+            <ul>
+                <li>
+                    <a href="article.html">Astronomy</a>
+                </li>
+                <li>
+                    <a href="article.html">Galaxy</a>
+                </li>
+                <li>
+                    <a href="article.html">Planet</a>
+                </li>
+                <li>
+                    <a href="article.html">Star</a>
+                </li>
+                <li>
+                    <a href="article.html">Telescope</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>
