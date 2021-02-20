@@ -13,16 +13,20 @@ const playSchema = new mongoose.Schema({
         maxlength: 50,
         // minlength: 20
     },
-    // price: {
-    //     type: Number,
-    //     required: [true, 'Price is required!'],
-    //     min: 0  
-    // },
     imageUrl: {
         type: String,
         required: true,
         validate: /^https?/
     },
+    isPublic: {
+        type: Boolean,
+        default: false
+    },
+    // price: {
+    //     type: Number,
+    //     required: [true, 'Price is required!'],
+    //     min: 0  
+    // },
     // brand: {
     //     type: String,
     //      required: [true, 'Brand is required!'],

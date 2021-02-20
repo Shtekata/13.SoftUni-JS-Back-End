@@ -1,27 +1,26 @@
- <main>
-    <div class="offer-details">
-        <h1>{{x.name}}</h1>
-        <div class="info">
-            <img src="{{x.imageUrl}}" alt="">
-            <div class="description">{{x.description}}
-                <br>
-                <br>
-                <p> <strong>Buyers:</strong> {{x.buyersCount}}</p>
-                <br>
-                <p class="price">${{x.price}}</p>
+<main>
+    <div class="container">
+        <section class="details">
+            <h1>Theater title: {{x.title}}</h1>
+            <div>
+                <img src="{{x.imageUrl}}" />
             </div>
-        </div>
-        <div class="actions">
-            {{#unless x.isCreator}}
-            {{#if x.isBoughtProduct}}
-            <span>You bought it</span>
-            {{else}}
-            <a href="/shoes/buy/{{x._id}}">Buy</a>
-            {{/if}}
-            {{else}}
-            <a href="/shoes/edit/{{x._id}}">Edit</a>
-            <a href="/shoes/delete/{{x._id}}">Delete</a>
-            {{/unless}}
-        </div>
+        </section>
+        <section class="details">
+            <h3>Theater Description</h3>
+            <p>{{x.description}}</p>
+            <div class="buttons">
+                {{#unless x.isCreator}}
+                {{#if x.isLiked}}
+                <span class="liked">You have already liked this play!</span>
+                {{else}}
+                <a class="btn like" href="/plays/like/{{x._id}}">Like</a>
+                {{/if}}
+                {{else}}
+                <a class="btn edit" href="/plays/edit/{{x._id}}">Edit</a>
+                <a class="btn delete" href="/plays/delete/{{x._id}}">Delete</a>
+                {{/unless}}
+            </div>
+        </section>
     </div>
 </main>

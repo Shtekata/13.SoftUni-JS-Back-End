@@ -6,14 +6,14 @@ import jwt from 'jsonwebtoken';
 const SALT_ROUNDS = config.SALT_ROUNDS;
 const SECRET = config.SECRET;
 
-const login = ({ email, password }) => User.findOne({ email })
+const login = ({ username, fullName, password, email }) => User.findOne({ username })
     .then(async x => {
-        if (!x) throw { msg: 'User with given email do not exists!' };
+        if (!x) throw { msg: 'User with given username do not exists!' };
         const y = await bcrypt.compare(password, x.password);
         return { x, y };
     }).then(z => {
         if (!z.y) throw { msg: 'Password does not match!' };
-        return jwt.sign({ _id: z.x._id, email: z.x.email, roles: z.x.roles }, SECRET);
+        return jwt.sign({ _id: z.x._id, username: z.x.username, email: z.x.email, roles: z.x.roles }, SECRET);
     });
 
 const register = ({ username, fullName, password, email }) => {

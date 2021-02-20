@@ -2,16 +2,22 @@ import User from '../models/User.js';
 import Entity from '../models/Entity.js';
 import authService from './authService.js';
 
-function getAll(query, user) {
-    if (user) {
-        return Entity.find().setOptions({ lean: true })
-            .where({ name: { $regex: query || '', $options: 'i' } })
-            .sort('buyers');
-    }
+function getAllAsc(query) {
     return Entity.find().setOptions({ lean: true })
-        .where({ name: { $regex: query || '', $options: 'i' } })
-        .sort('-buyers')
-        .limit(3);
+        .where({ title: { $regex: query || '', $options: 'i' } })
+        .sort('createdAt');
+}
+
+function getAllDesc(query) {
+    return Entity.find().setOptions({ lean: true })
+        .where({ title: { $regex: query || '', $options: 'i' } })
+        .sort('-createdAt');
+};
+
+function getAllLikesDesc(query) {
+    return Entity.find().setOptions({ lean: true })
+        .where({ title: { $regex: query || '', $options: 'i' } })
+        .sort('-usersLiked');
 };
 
 function getOne(id) {
@@ -74,12 +80,12 @@ function deleteOne(id) {
     });
 }
 
-async function buy(id, userId) {
+async function like(id, userId) {
     const user = await User.findById(userId);
     const entity = await Entity.findById(id);
 
-    user.offersBought.push(entity);
-    entity.buyers.push(user);
+    user.likedPlays.push(entity);
+    entity.usersLiked.push(user);
     const resultUser = user.save();
     const resultEntity = entity.save();
     
@@ -91,12 +97,14 @@ function getUserEntities(id) {
 }
 
 export default {
-    getAll,
+    getAllAsc,
+    getAllDesc,
+    getAllLikesDesc,
     getOne,
     getOneWithAccessories,
     createOne,
     updateOne,
     deleteOne,
-    buy,
+    like,
     getUserEntities
 };
