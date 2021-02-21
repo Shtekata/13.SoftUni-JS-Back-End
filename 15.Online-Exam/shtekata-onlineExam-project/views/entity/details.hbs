@@ -1,26 +1,19 @@
-<main>
-    <div class="container">
-        <section class="details">
-            <h1>Theater title: {{x.title}}</h1>
-            <div>
-                <img src="{{x.imageUrl}}" />
-            </div>
-        </section>
-        <section class="details">
-            <h3>Theater Description</h3>
+ <main>
+    <section class="expense-report">
+        <h1>ID: {{x._id}}</h1>
+        <div class="report-category">
+            <img src="static/images/amount.png" alt="">
+            <p>{{x.category}} - лв {{x.total}}</p>
+        </div>
+        <div class="report-merchant">
+            <p>{{x.merchant}}</p>
+        </div>
+        <div class="report-description">
+            <img src="static/images/hastag.png" alt="">
             <p>{{x.description}}</p>
-            <div class="buttons">
-                {{#unless x.isCreator}}
-                {{#if x.isLiked}}
-                <span class="liked">You have already liked this play!</span>
-                {{else}}
-                <a class="btn like" href="/plays/like/{{x._id}}">Like</a>
-                {{/if}}
-                {{else}}
-                <a class="btn edit" href="/plays/edit/{{x._id}}">Edit</a>
-                <a class="btn delete" href="/plays/delete/{{x._id}}">Delete</a>
-                {{/unless}}
-            </div>
-        </section>
-    </div>
+        </div>
+        <div class="report-action">
+            <a disabled href="/expenses/delete/{{x._id}}">Stop tracking</a>
+        </div>
+    </section>
 </main>

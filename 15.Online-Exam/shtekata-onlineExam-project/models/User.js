@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required!'],
+        minlength: 4,
         unique: true,
         // minlength: 3,
         // validate: {
@@ -39,12 +40,17 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        minlength: 3,
+        minlength: 4,
         required: [true, 'Password is required!'],
     },
+    amount: {
+        type: Number,
+        required: [true, 'Amound is required!'],
+        default: 0
+    },
     roles: [{ type: String }],
-    likedPlays: [{
-        type: mongoose.Types.ObjectId, ref: 'Play'
+    expenses: [{
+        type: mongoose.Types.ObjectId, ref: 'Expense'
     }],
 });
 

@@ -1,16 +1,13 @@
  <main>
-    <form method="post">
-        <h2>Login</h2>
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" name="username" placeholder="Username"
-                value="{{username}}">
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" placeholder="Password"
-                value="">
-        </div>
-        <button class="btn" type="submit">Login</button>
+    <form method="POST">
+        <h1>Login</h1>
+        <p>Personal info</p>
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username"
+            placeholder="JustMyself123..." value="{{username}}">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password"
+            placeholder="********">
+        <button type="submit">Login</button>
     </form>
 </main>

@@ -14,7 +14,8 @@ import {
     PASSWORD_MIN_LENGTH,
     PASSWORD_CONFIRMATION_ERR,
     FULLNAME_MIN_LENGTH,
-    EMAIL_MIN_LENGTH
+    EMAIL_MIN_LENGTH,
+    USER_AMOUNT_MIN
 } from '../config/constants.js';
 
 const router = Router();
@@ -45,8 +46,8 @@ router.post('/register',
     //     .matches(ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'full name!'),
     body('password').trim()
         .notEmpty().withMessage('Specify password!')
-        .isLength({ min: PASSWORD_MIN_LENGTH }).withMessage(`Password must be at least ${PASSWORD_MIN_LENGTH} characters!`)
-        .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'password!'),
+        .isLength({ min: PASSWORD_MIN_LENGTH }).withMessage(`Password must be at least ${PASSWORD_MIN_LENGTH} characters!`),
+        // .matches(ENGLISH_ALPHANUMERIC_PATTERN).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'password!'),
     body('rePassword').custom((value, { req }) => {
         if (value === req.body.password) return true;
         throw PASSWORD_CONFIRMATION_ERR; }),
@@ -56,8 +57,12 @@ router.post('/register',
         .isEmail().withMessage('Not valid email!')
         .isLength({ min: EMAIL_MIN_LENGTH }).withMessage(`Email must be at least ${EMAIL_MIN_LENGTH} characters!`)
         .matches(ENGLISH_ALPHANUMERIC_PATTERN_FOR_EMAIL).withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'email!'),
+     body('amount').trim()
+        .notEmpty().withMessage('Specify amount!')
+        .isFloat({ min: USER_AMOUNT_MIN})
+        .withMessage(`Amount must be at least ${USER_AMOUNT_MIN} value!`),
     (req, res, next) => {
-        const { username, fullName, password, email } = req.body;
+        const { username, fullName, password, email, amount } = req.body;
 
         if (!validationResult(req).isEmpty()) {
             let err = {};
@@ -66,7 +71,7 @@ router.post('/register',
             return res.render('auth/register', { title: 'Register Page', err, x: req.body })
         };
         
-        authService.register({ username, fullName, email, password  })
+        authService.register({ username, fullName, email, password, amount  })
             .then(x => authService.login({ username, fullName, email, password }))
             .then(x => { res.cookie(COOKIE_NAME, x); res.redirect('/') })
             .catch(x => res.render('auth/register', { title: 'Register Page', err: x }))
@@ -78,30 +83,42 @@ router.get('/logout', isAuth, (req, res) => {
 });
 
 router.get('/profile/:id', (req, res, next) => {
-    authService.getUserWithOffersBought(req.params.id)
+    authService.getUserWithExpenses(req.params.id)
         .then(x => {
             x.totalCost = 0;
-            x.offersBought.map(y => x.totalCost += y.price);
-            x.offersBoughtCount = x.offersBought.length;
+            x.expenses.map(y => x.totalCost += y.total);
+            x.expensesCount = x.expenses.length;
+            x.availableAmount = x.amount - x.totalCost;
             return x;
         })
-        .then(x => {
-            return entityService.getUserEntities(req.params.id)
-                .then(y => {
-                    x.totalProfit = 0;
-                    x.mySalesCount = 0;
-                    x.offersSaled = y;
-                    y.map(z => {
-                        x.totalProfit += z.buyers.length * z.price;
-                        x.mySalesCount += z.buyers.length;
-                    });
-                    x.myOffersCount = y.length;
-                    x.totalProfit = x.totalProfit.toFixed(2);
-                    return x;
-                });
-        })
+        // .then(x => {
+        //     return entityService.getUserEntities(req.params.id)
+        //         .then(y => {
+        //             x.totalProfit = 0;
+        //             x.mySalesCount = 0;
+        //             x.offersSaled = y;
+        //             y.map(z => {
+        //                 x.totalProfit += z.buyers.length * z.price;
+        //                 x.mySalesCount += z.buyers.length;
+        //             });
+        //             x.myOffersCount = y.length;
+        //             x.totalProfit = x.totalProfit.toFixed(2);
+        //             return x;
+        //         });
+        // })
         .then(x => res.render('auth/profile', x))
         .catch(next);
 });
+
+router.post('/refill/:id', isAuth, (req, res, next) => {
+    if (!+req.body.amount) {
+        req.session.err = { msg: 'Amount have to be number!' };
+        return res.redirect('/');
+    };
+    if ( req.body.amount <= 0) return res.render('home/home', { err: { msg: 'Amount have to be greater than 0!' } });
+    authService.updateOne(req.params.id, req.body)
+        .then(x => res.redirect('/'))
+        .catch(next);
+})
 
 export default router;

@@ -1,27 +1,40 @@
 import mongoose from 'mongoose';
 
-const playSchema = new mongoose.Schema({
-    title: {
+const expenseSchema = new mongoose.Schema({
+    merchant: {
         type: String,
-        required: [true, 'Play title is required!'],
-        unique:true,
-        // minlength: 5
+        required: [true, 'Merchant is required!'],
+        minlength: 4
+        // unique:true,
+    },
+     total: {
+        type: Number,
+        required: [true, 'Total is required!'],
+        min: 0  
+    },
+     category: {
+        type: String,
+         required: [true, 'Category is required!'],
     },
     description: {
         type: String,
         required: [true, 'Description is required!'],
-        maxlength: 50,
-        // minlength: 20
+        minlength: 3,
+        maxlength: 30,
     },
-    imageUrl: {
-        type: String,
-        required: true,
-        validate: /^https?/
-    },
-    isPublic: {
+    // imageUrl: {
+    //     type: String,
+    //     required: true,
+    //     validate: /^https?/
+    // },
+    report: {
         type: Boolean,
         default: false
     },
+    // isPublic: {
+    //     type: Boolean,
+    //     default: false
+    // },
     // price: {
     //     type: Number,
     //     required: [true, 'Price is required!'],
@@ -38,15 +51,15 @@ const playSchema = new mongoose.Schema({
     creator: {
         type: mongoose.Types.ObjectId, required: true, ref: 'User'
     },
-    usersLiked: [{
-        type: mongoose.Types.ObjectId, ref: 'User'
-    }]
+    // usersLiked: [{
+    //     type: mongoose.Types.ObjectId, ref: 'User'
+    // }]
 });
 
-playSchema.pre('validate', function (next) {
+expenseSchema.pre('validate', function (next) {
     const date = new Date();
     this.createdAt = date;
     next();
 });
 
-export default mongoose.model('Play', playSchema);
+export default mongoose.model('Expense', expenseSchema);

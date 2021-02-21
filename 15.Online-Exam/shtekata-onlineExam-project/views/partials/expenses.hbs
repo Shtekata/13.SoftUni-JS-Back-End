@@ -1,0 +1,15 @@
+<table class="expenses">
+    <thead>
+        <tr>
+            <th>Merchant</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each expenses}}
+        {{>expense user=../user}}
+        {{/each}}
+    </tbody>
+</table>

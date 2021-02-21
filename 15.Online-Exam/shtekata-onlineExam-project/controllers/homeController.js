@@ -7,10 +7,12 @@ const router = Router();
 
 router.get('/', (req, res, next) => {
     if (res.locals.user) {
-        return entityService.getAllDesc(req.query.search)
+        const userId = res.locals.user._id;
+        return entityService.getAllDesc(req.query.search, userId)
         .then(x => {
-            x.forEach(x => x.usersLiked = x.usersLiked.length);
-            res.render('home/home', { title: TITLE_HOME, plays: x, user: res.locals.user })
+            // x.forEach(x => x.usersLiked = x.usersLiked.length);
+            res.render('home/home', { title: TITLE_HOME, expenses: x, user: res.locals.user, err: req.session.err })
+            req.session.err = null;
         })
         .catch(next);
     }

@@ -9,14 +9,14 @@ import {
     ENTITY_PROPERTY_ONE,
     ENTITY_PROPERTY_ONE_MIN_LENGTH,
     ENTITY_PROPERTY_TWO,
-    ENTITY_PROPERTY_TWO_MIN_LENGTH,
-    ENTITY_PROPERTY_TWO_MAX_LENGTH,
+    ENTITY_PROPERTY_TWO_MIN,
     ENTITY_PROPERTY_THREE,
     ENTITY_PROPERTY_THREE_MIN_LENGTH,
     ENTITY_PROPERTY_FOUR,
-    ENTITY_PROPERTY_FOUR_DEFAULT,
+    ENTITY_PROPERTY_FOUR_MIN_LENGTH,
+    ENTITY_PROPERTY_FOUR_MAX_LENGTH,
     ENTITY_PROPERTY_FIVE,
-    ENTITY_PROPERTY_FIVE_MIN_LENGTH,
+    ENTITY_PROPERTY_FIVE_DEFAULT,
     ENGLISH_ALPHANUMERIC_MESSAGE,
     ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE,
 } from '../config/constants.js';
@@ -28,7 +28,7 @@ router.get('/details/:id', (req, res, next) => {
         .then(x => {
             const userId = res.locals.user._id;
             if (x.creator == userId) x.isCreator = true;
-            if (x.usersLiked.toString().includes(userId)) x.isLiked = true;
+            // if (x.usersLiked.toString().includes(userId)) x.isLiked = true;
             res.render(`entity/details`, { title: `${ENTITY_NAME} Details`, x, err: req.session.err })
         })
         .catch(next)
@@ -37,20 +37,30 @@ router.get('/details/:id', (req, res, next) => {
 router.get('/create', isAuth, (req, res) => res.render('entity/create', { title: `Create ${ENTITY_NAME}` }));
 router.post('/create',
     isAuth,
-    body('title').trim()
+    body('merchant').trim()
         .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_ONE}!`)
         .isLength({ min: ENTITY_PROPERTY_ONE_MIN_LENGTH })
         .withMessage(`${ENTITY_PROPERTY_ONE} must be at least ${ENTITY_PROPERTY_ONE_MIN_LENGTH} characters!`),
     // .matches(ENGLISH_ALPHANUMERIC_PATTERN_WITH_SPACE)
     // .withMessage(ENGLISH_ALPHANUMERIC_MESSAGE + 'title!'),
-    body('description').trim()
+    body('total').trim()
         .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_TWO}!`)
-        .isLength({ min: ENTITY_PROPERTY_TWO_MIN_LENGTH, max: ENTITY_PROPERTY_TWO_MAX_LENGTH })
-        .withMessage(`${ENTITY_PROPERTY_TWO} must be between ${ENTITY_PROPERTY_TWO_MIN_LENGTH} and ${ENTITY_PROPERTY_TWO_MAX_LENGTH} characters!`),
-    body('imageUrl', 'Not valid image URL').isURL({ protocols: ['http', 'https'] }),
-    body('isPublic').custom((value, { req }) => {
+        .isFloat({ min: ENTITY_PROPERTY_TWO_MIN})
+        .withMessage(`${ENTITY_PROPERTY_TWO} must be at least ${ENTITY_PROPERTY_TWO_MIN} value!`),
+     body('category').notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_THREE}`)
+        .isLength({ min: ENTITY_PROPERTY_THREE_MIN_LENGTH })
+        .withMessage(`${ENTITY_PROPERTY_THREE} must be selected from dropdown menu!`),
+    body('description').trim()
+        .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_FOUR}!`)
+        .isLength({ min: ENTITY_PROPERTY_FOUR_MIN_LENGTH, max: ENTITY_PROPERTY_FOUR_MAX_LENGTH })
+        .withMessage(`${ENTITY_PROPERTY_FOUR} must be between ${ENTITY_PROPERTY_FOUR_MIN_LENGTH} and ${ENTITY_PROPERTY_FOUR_MAX_LENGTH} characters!`),
+    body('report').custom((value, { req }) => {
         if (value === 'on' || value === undefined) return true;
-        throw {err:{msg:'isPublic not working properly!'}}; }),
+        throw {err:{msg:'Report not working properly!'}}; }),
+    // body('imageUrl', 'Not valid image URL').isURL({ protocols: ['http', 'https'] }),
+    // body('isPublic').custom((value, { req }) => {
+    //     if (value === 'on' || value === undefined) return true;
+    //     throw {err:{msg:'isPublic not working properly!'}}; }),
     // body('price').trim()
     //     .notEmpty().withMessage(`Specify ${ENTITY_PROPERTY_THREE}!`)
     //     .isFloat({ min: ENTITY_PROPERTY_THREE_MIN_LENGTH })
@@ -64,13 +74,13 @@ router.post('/create',
             let err = {};
             const errors = validationResult(req).array();
             errors.forEach(x => err.msg = err.msg ? `${err.msg}\n${x.msg}` : x.msg);
-            req.body.isPublic ? req.body.isChecked = 'checked' : '';
+            req.body.report ? req.body.isChecked = 'checked' : '';
             return res.render('entity/create', { title: `Create ${ENTITY_NAME}`, err, x: req.body });
         };
 
         let data = req.body;
         data.creator = res.locals.user._id;
-        data.isPublic = !!data.isPublic;
+        data.report = !!data.report;
         entityService.createOne(data)
             .then(x => res.redirect('/'))
             .catch(next);
@@ -79,7 +89,7 @@ router.post('/create',
 router.get('/edit/:id', isAuth, (req, res, next) => {
     entityService.getOne(req.params.id)
         .then(x => {
-            x.isPublic ? x.isChecked = 'checked' : '';
+            x.report ? x.isChecked = 'checked' : '';
             if (x.creator == res.locals.user._id) res.render('entity/edit', { title: `Edit ${ENTITY_NAME} Page`, x });
             else res.redirect('/');
         })
@@ -89,7 +99,7 @@ router.post('/edit/:id', isAuth, (req, res, next) => {
     entityService.getOne(req.params.id)
         .then(x => {
             if (x.creator != res.locals.user._id) return;
-            req.body.isPublic = !!req.body.isPublic;
+            req.body.report = !!req.body.report;
             return entityService.updateOne(req.params.id, req.body);
         })
         .then(x => res.redirect(`/${ENTITIES}/details/${req.params.id}`))
