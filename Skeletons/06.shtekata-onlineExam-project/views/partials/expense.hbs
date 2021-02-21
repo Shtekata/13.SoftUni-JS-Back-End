@@ -1,0 +1,22 @@
+<tr>
+    <td>
+        {{#if report}}
+        <p>{{merchant}}</p>
+        <div class="report">
+            <a href="/expenses/details/{{_id}}">Report</a>
+        </div>
+        {{/if}}
+    </td>
+    <td>
+        <img src="/static/img/amount.png" alt="">
+        <p>лв {{total}}</p>
+    </td>
+    <td>
+        <img src="/static/img/category.png" alt="">
+        <p>{{category}}</p>
+    </td>
+    <td>
+        <img src="/static/img/hastag.png" alt="">
+        <p>{{description}}</p>
+    </td>
+</tr>

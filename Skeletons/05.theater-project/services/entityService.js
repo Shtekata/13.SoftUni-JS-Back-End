@@ -2,21 +2,21 @@ import User from '../models/User.js';
 import Entity from '../models/Entity.js';
 import authService from './authService.js';
 
-function getAllAsc(query, userId) {
-    return Entity.find({ creator: userId }).setOptions({ lean: true })
-        .where({ merchant: { $regex: query || '', $options: 'i' } })
+function getAllAsc(query) {
+    return Entity.find().setOptions({ lean: true })
+        .where({ title: { $regex: query || '', $options: 'i' } })
         .sort('createdAt');
 }
 
-function getAllDesc(query, userId) {
-    return Entity.find({ creator: userId }).setOptions({ lean: true })
-        .where({ merchant: { $regex: query || '', $options: 'i' } })
+function getAllDesc(query) {
+    return Entity.find().setOptions({ lean: true })
+        .where({ title: { $regex: query || '', $options: 'i' } })
         .sort('-createdAt');
 };
 
-function getAllLikesDesc(query, userId) {
-    // return Entity.find({ creator: userId }).setOptions({ lean: true })
-    //     .where({ merchant: { $regex: query || '', $options: 'i' } })
+function getAllLikesDesc(query) {
+    // return Entity.find().setOptions({ lean: true })
+    //     .where({ title: { $regex: query || '', $options: 'i' } })
     //     .sort('-usersLiked');
     return Entity.aggregate([
         {
@@ -47,13 +47,7 @@ function createOne(data) {
     const entity = new Entity({ ...data });
     return new Promise((resolve, reject) => {
         entity.save()
-            .then(x => {
-                return User.findById(data.creator)
-                    .then(y => {
-                        y.expenses.push(x);
-                        resolve(y.save());
-                })
-            })
+            .then(x => resolve(x))
             .catch(x => {
                 let err = {};
                 if (!x.errors) err.msg = x.message;
@@ -127,5 +121,5 @@ export default {
     updateOne,
     deleteOne,
     like,
-    getUserEntities,
+    getUserEntities
 };

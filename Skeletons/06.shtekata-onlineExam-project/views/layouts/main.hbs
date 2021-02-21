@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/static/css/site.css">
+        <link rel="shortcut icon" href="/static/favicon.ico"
+            type="image/x-icon">
+        <title>{{title}}</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li>
+                        <a id="home" class="left-floated" href="/">MoneyGone</a>
+                    </li>
+                </ul>
+                {{#if err}}
+                <div class="notifications">
+                    <p class="notification-message">{{err.msg}}</p>
+                </div>
+                {{/if}}
+                <ul>
+                    {{#unless user}}
+                    <li>
+                        <a class="right-floated" href="/auth/login">Login</a>
+                    </li>
+                    {{else}}
+                    <li>
+                        <a class="right-floated"
+                            href="/auth/profile/{{user._id}}">{{user.username}}</a>
+                    </li>
+                    <li>
+                        <a class="right-floated" href="/auth/logout">Logout</a>
+                    </li>
+                    {{/unless}}
+                </ul>
+            </nav>
+        </header>
+        {{{body}}}
+        <footer>
+            <a href="/"> &uarr; Back to top &uarr;</a>
+            <img src="https://softuni.bg/Content/images/about-page/softuni.png"
+                alt="">
+            <p>Software University - JavaScript Back-End February 2021</p>
+            <p>@All Rights Reserved &copy;</p>
+        </footer>
+    </body>
+</html>
